@@ -1,0 +1,201 @@
+/* ===============================================
+[1] PEMBOLEHUBAH (VARIABLES) GLOBAL
+=============================================== */
+:root {
+    --primary-color: #0056b3;
+    --secondary-color: #007bff;
+    --font-color: #333333;
+    --label-color: #555555;
+    --bg-color: #f4f7f6;
+    --container-bg: #ffffff;
+    --border-color: #dcdcdc;
+    --focus-color: rgba(0, 86, 179, 0.25);
+    --font-family: 'Poppins', sans-serif;
+}
+
+/* ===============================================
+[2] GAYA ASAS BADAN (BODY)
+=============================================== */
+body {
+    font-family: var(--font-family);
+    background-color: var(--bg-color);
+    color: var(--font-color);
+    margin: 0;
+    padding: 20px;
+}
+
+/* ===============================================
+[3] KOTAK UTAMA (CONTAINER)
+=============================================== */
+.container {
+    max-width: 900px;
+    margin: 20px auto;           /* Tengah secara mendatar */
+    background-color: var(--container-bg);
+    padding: 30px;
+    border-radius: 25px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* ===============================================
+[4] HEADER & LOGO
+=============================================== */
+header {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+header img {
+    max-width: 100%;              /* Kecilkan saiz imej header */
+    height: auto;
+}
+
+/* ===============================================
+[5] FIELDSET & LEGEND (TAJUK BAHAGIAN BORANG)
+=============================================== */
+fieldset {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 25px;
+    margin-bottom: 25px;
+}
+
+legend {
+    font-size: 1.5em;
+    font-weight: 700;
+    color: var(--primary-color);
+    padding: 0 10px;
+    margin-bottom: 15px;
+
+    /* Reset indent dan tengah teks */
+    margin-left: 0;
+    text-align: center;
+}
+
+/* ===============================================
+[6] SUSUNAN BORANG (DUA LAJUR YANG KEMAS)
+=============================================== */
+.form-group {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    gap: 20px;
+    align-items: start;          /* Selaraskan dari atas */
+    margin-bottom: 20px;
+
+    /* Alih keseluruhan baris ke kanan supaya kotak input selari */
+    margin-left: 30px;           /* Ubah 30px mengikut keperluan anda */
+}
+
+/* ===============================================
+[7] GAYA LABEL DAN INPUT
+=============================================== */
+label {
+    font-weight: 600;
+    color: var(--label-color);
+    text-align: left;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="date"],
+input[type="number"],
+select,
+textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 1em;
+    font-family: var(--font-family);
+    box-sizing: border-box;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 8px var(--focus-color);
+    outline: none;
+}
+
+textarea {
+    resize: vertical;           /* Boleh ubah saiz menegak sahaja */
+}
+
+/* ===============================================
+[8] MEDAN TERSEMBUNYI (JIKA DIGUNAKAN)
+=============================================== */
+.hidden-fields {
+    display: none;
+}
+
+/* ===============================================
+[9] BUTANG HANTAR PERMOHONAN
+=============================================== */
+.submit-btn {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    background-color: var(--primary-color);
+    color: rgb(230, 221, 221);                /* Contoh: merah terang */
+    border: none;
+    border-radius: 8px;
+    font-size: 1.2em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    margin-top: 30px;
+    margin-bottom: 40px;        /* Ruang bawah butang */
+}
+
+.submit-btn:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-2px);
+}
+
+/* [X] GAYA UNTUK PENGESAHAN & DISCLAIMER */
+.confirmation-group {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: center;
+  margin: 15px 0;
+}
+
+.confirmation-group label {
+  margin: 0;
+}
+
+.disclaimer {
+  display: flex;
+    align-items: flex-start;
+    margin-top: 1rem;
+}
+
+.disclaimer-with-checkbox input[type="checkbox"] {
+    margin-top: 0.5em;
+}
+
+.disclaimer {
+    margin: 0;
+}
+
+
+/* ===============================================
+[10] RESPONSIF UNTUK SKRIN KECIL
+=============================================== */
+@media (max-width: 768px) {
+    .form-group {
+        grid-template-columns: 1fr;
+        gap: 5px;
+        margin-left: 0;         /* Buang shift di mobile */
+    }
+
+    label {
+        margin-bottom: 5px;
+    }
+
+    legend {
+        text-align: center;
+    }
+}
