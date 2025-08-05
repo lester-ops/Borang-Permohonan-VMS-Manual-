@@ -196,6 +196,7 @@ if (alamatMalaysia) {
 
       if (response.ok) {
         alert(t.alert_success);
+      await generatePDF();
         form.reset();
         hideAllOptionalFields();
         submitBtn.disabled = true;
@@ -277,3 +278,41 @@ if (alamatMalaysia) {
   
   initializePage();
 });
+
+
+
+async function generatePDF() {
+  const { jsPDF } = window.jspdf;
+  const pdfContent = document.getElementById("pdf-content");
+
+  const disclaimer = document.querySelector('.disclaimer-with-checkbox');
+  const recaptcha = document.querySelector('.g-recaptcha');
+  const submitBtn = document.getElementById("submitBtn");
+
+  if (disclaimer) disclaimer.style.display = "none";
+  if (recaptcha) recaptcha.style.display = "none";
+  if (submitBtn) submitBtn.style.display = "none";
+
+  const canvas = await html2canvas(pdfContent, {
+    scale: 2,
+    useCORS: true,
+    windowWidth: pdfContent.scrollWidth,
+  });
+
+  const imgData = canvas.toDataURL("image/png");
+  const pdf = new jsPDF("p", "mm", "a4");
+  const pdfWidth = pdf.internal.pageSize.getWidth();
+  const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+  pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+
+  const nama = document.getElementById("nama_penuh")?.value || "borang";
+  const namaFail = `Borang_${nama.replace(/\s+/g, "_")}.pdf`;
+
+  pdf.save(namaFail);
+
+  if (disclaimer) disclaimer.style.display = "block";
+  if (recaptcha) recaptcha.style.display = "block";
+  if (submitBtn) submitBtn.style.display = "inline-block";
+}
+
