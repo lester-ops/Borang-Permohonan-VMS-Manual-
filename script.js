@@ -161,10 +161,20 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     try {
-      const response = await fetch(scriptURL, {
-        method: "POST",
-        body: formData
-      });
+  const token = grecaptcha.getResponse();
+
+  if (!token) {
+    alert("⚠️ Sila sahkan bahawa anda bukan robot (reCAPTCHA).");
+    return;
+  }
+
+  formData.append('g-recaptcha-response', token);
+
+  const response = await fetch(scriptURL, {
+    method: "POST",
+    body: formData
+  });
+
 
       if (response.ok) {
         alert(t.alert_success);
