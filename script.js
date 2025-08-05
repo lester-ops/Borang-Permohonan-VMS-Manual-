@@ -253,7 +253,7 @@ if (alamatMalaysia) {
 
   warganegaraSelect.addEventListener('change', function () {
     hideAllOptionalFields();
-    if (this.value === 'Malaysia') {
+    if (this.value === 'MALAYSIA') {
       malaysianFields.style.display = 'block';
     } else if (this.value === 'Lain-lain') {
       otherNationalityField.style.display = 'block';
