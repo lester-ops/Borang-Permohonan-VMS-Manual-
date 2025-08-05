@@ -173,7 +173,7 @@ if (alamatMalaysia) {
 
     const formData = new FormData(form);
 
-    if (formData.get("Warganegara") === "Lain-lain") {
+    if (formData.get("Warganegara") === "OTHER") {
       const other = document.getElementById("other_nationality_input").value;
       formData.set("WarganegaraLain", other);
     }
@@ -233,7 +233,7 @@ if (alamatMalaysia) {
 "SYRIA", "TAIWAN", "TAJIKISTAN", "TANZANIA", "THAILAND", "TIMOR-LESTE", "TOGO", "TONGA", "TRINIDAD AND TOBAGO",
 "TUNISIA", "TURKEY", "TURKMENISTAN", "TUVALU", "UGANDA", "UKRAINE", "UNITED ARAB EMIRATES", "UNITED KINGDOM",
 "UNITED STATES", "URUGUAY", "UZBEKISTAN", "VANUATU", "VATICAN CITY", "VENEZUELA", "VIETNAM", "YEMEN", "ZAMBIA",
-"ZIMBABWE", "LAIN-LAIN"
+"ZIMBABWE", "OTHER"
 
     ];
 
@@ -255,7 +255,7 @@ if (alamatMalaysia) {
     hideAllOptionalFields();
     if (this.value === 'MALAYSIA') {
       malaysianFields.style.display = 'block';
-    } else if (this.value === 'Lain-lain') {
+    } else if (this.value === 'OTHER') {
       otherNationalityField.style.display = 'block';
     }
   });
