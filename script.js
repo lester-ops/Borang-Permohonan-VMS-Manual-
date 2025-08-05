@@ -110,6 +110,24 @@ document.addEventListener('DOMContentLoaded', function () {
     e.preventDefault();
     const t = translations[currentLang];
 
+      // -- Jadikan 'Nama Penuh' dan 'No. Pasport' huruf besar (uppercase) --
+  const namaInput = document.getElementById("nama_penuh");
+  const passportInput = document.getElementById("nombor_passport");
+
+  if (namaInput) {
+    namaInput.value = namaInput.value.toUpperCase();
+  }
+
+  if (passportInput) {
+    passportInput.value = passportInput.value.toUpperCase();
+  }
+
+    const alamatMalaysia = document.getElementById("alamat_malaysia");
+if (alamatMalaysia) {
+  alamatMalaysia.value = alamatMalaysia.value.toUpperCase();
+}
+
+
     if (!confirmCheckbox.checked) {
       alert(t.alert_confirm);
       confirmCheckbox.focus();

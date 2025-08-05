@@ -122,6 +122,11 @@ textarea {
     resize: vertical;           /* Boleh ubah saiz menegak sahaja */
 }
 
+input.uppercase,
+textarea.uppercase {
+    text-transform: uppercase;
+}
+
 /* ===============================================
 [8] MEDAN TERSEMBUNYI (JIKA DIGUNAKAN)
 =============================================== */
