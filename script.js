@@ -151,7 +151,7 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
 
-    const scriptURL = "https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec";
+    const scriptURL = "https://script.google.com/macros/s/AKfycbxUBb3-H5ZOn596HMpAQTEMi-0jgaD7JG2-GkAwzgcFfhim_25cUM1VFXdY4dQxAItKbw/exec";
     const formData = new FormData(form);
 
     const otherValue = document.getElementById("other_nationality_input")?.value || "";
