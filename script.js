@@ -264,7 +264,7 @@ async function generatePDF() {
     y += lineHeight;
   };
 
-  const getValue = (id) => document.getElementById(id)?.value?.toUpperCase() || "-";
+  const getValue = (id) => document.getElementById(id)?.value?.trim() || "-";
 
   const headerImg = new Image();
   headerImg.src = 'header.png'; // Pastikan header.png wujud
