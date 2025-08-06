@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       // -- Jadikan 'Nama Penuh' dan 'No. Pasport' huruf besar (uppercase) --
   const namaInput = document.getElementById("nama_penuh");
-  const passportInput = document.getElementById("nombor_passport");
+  const passportInput = document.getElementById("nombor_pasport");
 
   if (namaInput) {
     namaInput.value = namaInput.value.toUpperCase();
@@ -390,8 +390,3 @@ async function generatePDF() {
   const nama = getValue("nama_penuh").replace(/\s+/g, "_") || "borang";
   doc.save(`Borang_${nama}.pdf`);
 }
-
-
-
-
-
