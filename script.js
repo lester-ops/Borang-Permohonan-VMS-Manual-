@@ -1,5 +1,56 @@
+// ✅ Terjemahan GLOBAL — boleh diakses dari mana-mana fungsi
+const translations = {
+  ms: {
+    section_applicant: "Maklumat Pemohon",
+    full_name: "Nama Penuh",
+    gender: "Jantina",
+    passport_no: "No Pasport",
+    nationality: "Warganegara",
+    pr_number: "No PR / Pas Kerja",
+    pr_expiry: "Tarikh Mansuh PR",
+    email: "E-mel",
+    vehicle_info: "Maklumat Kenderaan",
+    brand_model: "Jenama / Model",
+    engine_no: "No Enjin",
+    chassis_no: "No Rangka",
+    year_made: "Tahun Dibentuk",
+    body_type: "Jenis Badan",
+    insurance_no: "No Insuran",
+    insurance_expiry: "Tarikh Luput",
+    travel_info: "Maklumat Perjalanan",
+    malaysia_address: "Alamat di Malaysia",
+    arrival_date: "Tarikh Tiba",
+    declaration: "Saya mengesahkan maklumat ini adalah betul dan sah.",
+    disclaimer: "Kerajaan Malaysia tidak bertanggungjawab atas kehilangan atau kerosakan.",
+    submit: "Hantar Permohonan"
+  },
+  en: {
+    section_applicant: "Applicant Information",
+    full_name: "Full Name",
+    gender: "Gender",
+    passport_no: "Passport No",
+    nationality: "Nationality",
+    pr_number: "PR / Work Pass No",
+    pr_expiry: "PR Expiry Date",
+    email: "Email",
+    vehicle_info: "Vehicle Information",
+    brand_model: "Brand / Model",
+    engine_no: "Engine No",
+    chassis_no: "Chassis No",
+    year_made: "Year Made",
+    body_type: "Body Type",
+    insurance_no: "Insurance No",
+    insurance_expiry: "Insurance Expiry",
+    travel_info: "Travel Information",
+    malaysia_address: "Address in Malaysia",
+    arrival_date: "Arrival Date",
+    declaration: "I confirm that the information provided is accurate.",
+    disclaimer: "The Malaysian Government shall not be liable for any loss or damage.",
+    submit: "Submit Application"
+  }
+};
+
 document.addEventListener('DOMContentLoaded', function () {
-  // --- KUMPULAN ELEMEN DOM ---
   const form = document.getElementById('vehicleForm');
   const warganegaraSelect = document.getElementById('warganegara');
   const malaysianFields = document.getElementById('malaysian-fields');
@@ -8,94 +59,17 @@ document.addEventListener('DOMContentLoaded', function () {
   const submitBtn = document.getElementById('submitBtn');
   const langToggle = document.getElementById('language-select');
 
-  // --- OBJEK TERJEMAHAN ---
-  const translations = {
-    ms: {
-      language_prompt: "Pilih Bahasa / Select Language:",
-      section_applicant: "Maklumat Pemohon",
-      full_name: "Nama Penuh (Seperti dalam Pasport)",
-      gender: "Jantina",
-      select_prompt: "-- Sila Pilih --",
-      male: "Lelaki",
-      female: "Perempuan",
-      passport_no: "Nombor Pasport",
-      nationality: "Warganegara",
-      other: "Lain-lain",
-      specify_nationality: "Sila Nyatakan Warganegara",
-      pr_number: "No PR / Pas Kerja",
-      pr_expiry: "Tarikh Mansuh PR / Pas Kerja",
-      email: "E-mel (Untuk Pas Perjalanan)",
-      vehicle_info: "Maklumat Kenderaan",
-      brand_model: "Jenama / Model",
-      engine_no: "Nombor Enjin",
-      chassis_no: "Nombor Rangka",
-      year_made: "Tahun Dibentuk",
-      body_type: "Jenis Badan",
-      insurance_no: "Nombor Insuran",
-      insurance_expiry: "Tarikh Luput Insuran",
-      travel_info: "Maklumat Perjalanan",
-      malaysia_address: "Alamat Lengkap Berada di Malaysia",
-      arrival_date: "Tarikh Jangka Tiba di Malaysia",
-      declaration: "Saya dengan ini mengesahkan bahawa butir-butir yang diberikan adalah betul dan akan mematuhi syarat-syarat yang ditetapkan.",
-      disclaimer: "Kerajaan Malaysia dan Jabatan Kastam Diraja Malaysia (\"JKDM\", \"kami\") adalah tidak bertanggungjawab bagi apa-apa kehilangan atau kerugian yang disebabkan oleh penggunaan maklumat dari laman web ini.",
-      submit: "Hantar Permohonan",
-      alert_confirm: "Sila tandakan pengesahan sebelum menghantar permohonan.",
-      alert_required: "Sila isi maklumat di ruangan: ",
-      alert_invalid_email: "Sila masukkan alamat e-mel yang sah.",
-      alert_invalid_year: (tahun) => `Sila masukkan tahun yang sah antara 1900 dan ${tahun}.`,
-      alert_success: "Permohonan berjaya dihantar.",
-    },
-    en: {
-      language_prompt: "Select Language:",
-      section_applicant: "Applicant Information",
-      full_name: "Full Name (As in Passport)",
-      gender: "Gender",
-      select_prompt: "-- Please Select --",
-      male: "Male",
-      female: "Female",
-      passport_no: "Passport Number",
-      nationality: "Nationality",
-      other: "Other",
-      specify_nationality: "Please Specify Nationality",
-      pr_number: "PR No / Work Pass",
-      pr_expiry: "PR or Work Pass Expiry Date",
-      email: "Email (For Travel Pass)",
-      vehicle_info: "Vehicle Information",
-      brand_model: "Brand / Model",
-      engine_no: "Engine Number",
-      chassis_no: "Chassis Number",
-      year_made: "Year Manufactured",
-      body_type: "Body Type",
-      insurance_no: "Insurance Number",
-      insurance_expiry: "Insurance Expiry Date",
-      travel_info: "Travel Information",
-      malaysia_address: "Full Address in Malaysia",
-      arrival_date: "Expected Arrival Date in Malaysia",
-      declaration: "I hereby confirm that the information provided is accurate and I will comply with the specified conditions.",
-      disclaimer: "The Government of Malaysia and the Royal Malaysian Customs Department (\"RMCD\", \"we\") shall not be held liable for any loss or damage caused by the use of any information obtained from this website.",
-      submit: "Submit Application",
-      alert_confirm: "Please check the confirmation box before submitting.",
-      alert_required: "Please fill in the following field: ",
-      alert_invalid_email: "Please enter a valid email address.",
-      alert_invalid_year: (year) => `Please enter a valid year between 1900 and ${year}.`,
-      alert_success: "Application successfully submitted.",
-    }
-  };
-
-  let currentLang = 'ms'; // Bahasa lalai
+  let currentLang = 'ms';
 
   function applyTranslation(lang) {
     document.querySelectorAll('[data-key]').forEach(el => {
       const key = el.getAttribute('data-key');
-      if (translations[lang] && translations[lang][key]) {
-        const translation = translations[lang][key];
-        if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
-          if (el.hasAttribute('placeholder')) {
-            el.placeholder = translation;
-          }
-        } else {
-          el.textContent = translation;
-        }
+      const translation = translations[lang]?.[key];
+      if (!translation) return;
+      if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+        if (el.placeholder !== undefined) el.placeholder = translation;
+      } else {
+        el.textContent = translation;
       }
     });
     document.title = translations[lang].submit;
@@ -109,9 +83,9 @@ document.addEventListener('DOMContentLoaded', function () {
   async function validateForm(e) {
     e.preventDefault();
 
-    const namaInput = document.getElementById("NamaPenuh");
+    const namaInput = document.getElementById("nama_penuh");
     const passportInput = document.getElementById("no_pasport");
-    const alamatMalaysia = document.getElementById("AlamatMalaysia");
+    const alamatMalaysia = document.getElementById("alamat_malaysia");
 
     if (namaInput) namaInput.value = namaInput.value.toUpperCase();
     if (passportInput) passportInput.value = passportInput.value.toUpperCase();
@@ -123,46 +97,35 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
 
-     const requiredFields = form.querySelectorAll('[required]');
+    const requiredFields = form.querySelectorAll('[required]');
     for (const field of requiredFields) {
       if (field.closest('.hidden-fields')?.style.display === 'none') continue;
       if (!field.value.trim()) {
         const label = form.querySelector(`label[for="${field.id}"]`);
-        let fieldName = label?.textContent || field.name;
-        alert("Sila isi maklumat di ruangan: " + fieldName);
+        alert("Sila isi maklumat di ruangan: " + (label?.textContent || field.name));
         field.focus();
         return;
       }
     }
 
     const emailInput = document.getElementById('email');
-    if (!emailInput) {
-      alert("Email input tidak dijumpai!");
-      return;
-    }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value)) {
+    if (!emailInput || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value)) {
       alert("Sila masukkan alamat e-mel yang sah.");
       emailInput.focus();
       return;
     }
 
     const tahunInput = document.getElementById('tahun_dibentuk');
-    if (!tahunInput) {
-      alert("Elemen tahun_dibentuk tidak dijumpai!");
-      return;
-    }
-
-    const tahunValue = parseInt(tahunInput.value, 10);
+    const tahunValue = parseInt(tahunInput?.value || '', 10);
     const currentYear = new Date().getFullYear();
-    if (tahunInput.value && (isNaN(tahunValue) || tahunValue < 1900 || tahunValue > currentYear)) {
+    if (isNaN(tahunValue) || tahunValue < 1900 || tahunValue > currentYear) {
       alert(`Sila masukkan tahun yang sah antara 1900 dan ${currentYear}.`);
       tahunInput.focus();
       return;
     }
 
-    const scriptURL = "https://script.google.com/macros/s/AKfycbxUBb3-H5ZOn596HMpAQTEMi-0jgaD7JG2-GkAwzgcFfhim_25cUM1VFXdY4dQxAItKbw/exec";
+    const scriptURL = "https://script.google.com/macros/s/AKfycbxUBb3-H5ZOn596HMpAQTEMi-0jgaD7JG2-GkAwzgcFfhim_25cUM1VFXdY4dQxAItKbw/exec"; // ← Ganti ini
     const formData = new FormData(form);
-
     const otherValue = document.getElementById("other_nationality_input")?.value || "";
     formData.set("WarganegaraLain", otherValue);
 
@@ -181,12 +144,12 @@ document.addEventListener('DOMContentLoaded', function () {
       });
 
       if (response.ok) {
-  alert("Permohonan berjaya dihantar.");
-  await generatePDF(); // ✅ aktifkan
-  form.reset();
-  submitBtn.disabled = true;
-  grecaptcha.reset();
-} else {
+        alert("Permohonan berjaya dihantar.");
+        await generatePDF(); // ✅ Aktifkan PDF selepas submit berjaya
+        form.reset();
+        submitBtn.disabled = true;
+        grecaptcha.reset();
+      } else {
         alert("⚠️ Ralat semasa menghantar borang.");
       }
     } catch (error) {
@@ -195,10 +158,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  // ✅ TAMBAHAN: Fungsi populateCountryList
   function populateCountryList() {
-    const countries = [
-      "AFGHANISTAN", "ALBANIA", "ALGERIA", "ANDORRA", "ANGOLA", "ANTIGUA AND BARBUDA", "ARGENTINA", "ARMENIA",
+    const countries = ["AFGHANISTAN", "ALBANIA", "ALGERIA", "ANDORRA", "ANGOLA", "ANTIGUA AND BARBUDA", "ARGENTINA", "ARMENIA",
 "AUSTRALIA", "AUSTRIA", "AZERBAIJAN", "BAHAMAS", "BAHRAIN", "BANGLADESH", "BARBADOS", "BELARUS", "BELGIUM",
 "BELIZE", "BENIN", "BHUTAN", "BOLIVIA", "BOSNIA AND HERZEGOVINA", "BOTSWANA", "BRAZIL", "BRUNEI", "BULGARIA",
 "BURKINA FASO", "BURUNDI", "CABO VERDE", "CAMBODIA", "CAMEROON", "CANADA", "CENTRAL AFRICAN REPUBLIC", "CHAD",
@@ -220,10 +181,7 @@ document.addEventListener('DOMContentLoaded', function () {
 "SYRIA", "TAIWAN", "TAJIKISTAN", "TANZANIA", "THAILAND", "TIMOR-LESTE", "TOGO", "TONGA", "TRINIDAD AND TOBAGO",
 "TUNISIA", "TURKEY", "TURKMENISTAN", "TUVALU", "UGANDA", "UKRAINE", "UNITED ARAB EMIRATES", "UNITED KINGDOM",
 "UNITED STATES", "URUGUAY", "UZBEKISTAN", "VANUATU", "VATICAN CITY", "VENEZUELA", "VIETNAM", "YEMEN", "ZAMBIA",
-"ZIMBABWE", "OTHER"
-
-    ];
-
+"ZIMBABWE", "OTHER"];
     countries.forEach(country => {
       const option = document.createElement('option');
       option.value = country;
@@ -232,7 +190,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // --- Event Listener ---
   langToggle.addEventListener('change', function () {
     currentLang = this.value;
     applyTranslation(currentLang);
@@ -240,11 +197,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
   warganegaraSelect.addEventListener('change', function () {
     hideAllOptionalFields();
-    if (this.value === 'MALAYSIA') {
-      malaysianFields.style.display = 'block';
-    } else if (this.value === 'OTHER') {
-      otherNationalityField.style.display = 'block';
-    }
+    if (this.value === 'MALAYSIA') malaysianFields.style.display = 'block';
+    else if (this.value === 'OTHER') otherNationalityField.style.display = 'block';
   });
 
   confirmCheckbox.addEventListener('change', function () {
@@ -264,68 +218,46 @@ document.addEventListener('DOMContentLoaded', function () {
   initializePage();
 });
 
-
-
 async function generatePDF() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF('p', 'mm', 'a4');
 
-  // ⚙️ Tetapan asas halaman PDF
-  const pageWidth = doc.internal.pageSize.getWidth();   // Lebar A4 = 210mm
-  const pageHeight = doc.internal.pageSize.getHeight(); // Tinggi A4 = 297mm
-
-  // 🌐 Dapatkan bahasa semasa dan terjemahan (BM/EN)
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
   const lang = typeof currentLang !== 'undefined' ? currentLang : 'ms';
   const t = translations[lang];
 
-  // ✅ Posisi dan gaya
-  const marginLeft = 25; // 🟡 Label kriteria (labelX) — gerakkan ke kanan jika mahu selari dengan logo
-  const valueX = pageWidth / 2 + 20; // 🟡 Posisi jawapan — selarikan ke kanan
-  let y = 60; // 🟡 Posisi permulaan selepas logo — naik/turun jika mahu tambah ruang
-  const lineHeight = 8; // 🟡 Jarak antara setiap baris maklumat
+  const marginLeft = 25;
+  const valueX = pageWidth / 2 + 20;
+  let y = 60;
+  const lineHeight = 8;
 
-  // 🔠 Tajuk seksyen tengah + garis bawah
-  const boldCenterTitle = (text) => {
-    doc.setFont("Helvetica", "bold");
-    doc.setFontSize(14);
-    const textWidth = doc.getTextWidth(text);
-    const centerX = (pageWidth - textWidth) / 2; // 🟡 Letakkan tajuk di tengah halaman
-    doc.text(text, centerX, y);
-    y += 2;
-    doc.setDrawColor(0);
-    doc.setLineWidth(0.5);
-    doc.line(marginLeft, y, pageWidth - marginLeft, y); // 🟡 Garisan bawah tajuk
-    y += lineHeight;
-  };
-
-  // 🏷️ Satu baris maklumat: label kiri + jawapan kanan
   const row = (labelKey, value) => {
-    doc.setFont("Helvetica", "normal");
+    const label = t[labelKey] || labelKey;
     doc.setFontSize(11);
-    const label = t[labelKey] || labelKey; // 🔄 Dapatkan terjemahan berdasarkan kunci
-    doc.text(label + ":", marginLeft, y);  // 🟡 Label di margin kiri
-    doc.text(value || "-", valueX, y);     // 🟡 Jawapan di tengah kanan
+    doc.text(`${label}:`, marginLeft, y);
+    doc.text(value || '-', valueX, y);
     y += lineHeight;
   };
 
-  // 🧾 Fungsi ambil nilai dari input borang
   const getValue = (id) => document.getElementById(id)?.value?.toUpperCase() || "-";
 
-  // 🖼️ Tambah gambar header/logo penuh
   const headerImg = new Image();
-  headerImg.src = 'header.png';
+  headerImg.src = 'header.png'; // pastikan fail ini wujud
 
-  await new Promise((resolve) => {
+  await new Promise(resolve => {
     headerImg.onload = () => {
-      const headerWidth = pageWidth - 2 * marginLeft; // 🟡 Saiz lebar gambar
+      const headerWidth = pageWidth - 2 * marginLeft;
       const headerHeight = (headerImg.height / headerImg.width) * headerWidth;
-      doc.addImage(headerImg, 'PNG', marginLeft, 10, headerWidth, headerHeight); // 🟡 '10' = jarak dari atas
+      doc.addImage(headerImg, 'PNG', marginLeft, 10, headerWidth, headerHeight);
       resolve();
     };
   });
 
-  // ✏️ Maklumat Pemohon
-  boldCenterTitle(t.section_applicant); // Tajuk seksyen ikut bahasa
+  doc.setFont("Helvetica", "bold");
+  doc.setFontSize(14);
+  doc.text(t.section_applicant, marginLeft, y); y += lineHeight;
+
   row("full_name", getValue("nama_penuh"));
   row("gender", getValue("jantina"));
   row("passport_no", getValue("no_pasport"));
@@ -334,9 +266,10 @@ async function generatePDF() {
   row("pr_expiry", getValue("tarikh_mansuh_pr"));
   row("email", getValue("email"));
 
-  // ✏️ Maklumat Kenderaan
-  y += 5; // 🟡 Jarak antara seksyen
-  boldCenterTitle(t.vehicle_info);
+  y += 5;
+  doc.setFont("Helvetica", "bold");
+  doc.text(t.vehicle_info, marginLeft, y); y += lineHeight;
+
   row("brand_model", getValue("jenama_model"));
   row("engine_no", getValue("no_enjin"));
   row("chassis_no", getValue("no_rangka"));
@@ -345,21 +278,18 @@ async function generatePDF() {
   row("insurance_no", getValue("no_insuran"));
   row("insurance_expiry", getValue("tarikh_luput_insuran"));
 
-  // ✏️ Maklumat Perjalanan
   y += 5;
-  boldCenterTitle(t.travel_info);
+  doc.setFont("Helvetica", "bold");
+  doc.text(t.travel_info, marginLeft, y); y += lineHeight;
+
   row("malaysia_address", getValue("alamat_malaysia"));
   row("arrival_date", getValue("tarikh_tiba"));
 
-  // ✅ Ayat pengesahan — diturunkan sedikit supaya ada jarak
   y += 12;
   doc.setFont("Helvetica", "bold");
   doc.setFontSize(11);
-  doc.text(t.declaration, marginLeft, y, {
-    maxWidth: pageWidth - 2 * marginLeft
-  });
+  doc.text(t.declaration, marginLeft, y, { maxWidth: pageWidth - 2 * marginLeft });
 
-  // 🕒 Tarikh Cetakan (footer kanan bawah) ikut bahasa
   const today = new Date();
   const dateString = today.toLocaleDateString(lang === "ms" ? "ms-MY" : "en-GB", {
     day: 'numeric', month: 'long', year: 'numeric'
@@ -367,11 +297,8 @@ async function generatePDF() {
 
   doc.setFont("Helvetica", "normal");
   doc.setFontSize(10);
-  doc.text(`${lang === "ms" ? "Tarikh Cetakan" : "Date Printed"}: ${dateString}`, pageWidth - marginLeft, pageHeight - 10, {
-    align: "right"
-  });
+  doc.text(`Tarikh Cetakan: ${dateString}`, pageWidth - marginLeft, pageHeight - 10, { align: "right" });
 
-  // 💾 Simpan fail PDF berdasarkan nama pemohon
   const nama = getValue("nama_penuh").replace(/\s+/g, "_") || "borang";
   doc.save(`Borang_${nama}.pdf`);
 }
