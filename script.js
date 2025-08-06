@@ -241,3 +241,88 @@ document.addEventListener('DOMContentLoaded', function () {
 
   initializePage();
 });
+
+
+async function generatePDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF('p', 'mm', 'a4');
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const lang = typeof currentLang !== 'undefined' ? currentLang : 'ms';
+  const t = translations[lang];
+
+  const marginLeft = 25;
+  const valueX = pageWidth / 2 + 20;
+  let y = 60;
+  const lineHeight = 8;
+
+  const row = (labelKey, value) => {
+    const label = t[labelKey] || labelKey;
+    doc.setFontSize(11);
+    doc.text(`${label}:`, marginLeft, y);
+    doc.text(value || '-', valueX, y);
+    y += lineHeight;
+  };
+
+  const getValue = (id) => document.getElementById(id)?.value?.toUpperCase() || "-";
+
+  const headerImg = new Image();
+  headerImg.src = 'header.png'; // Pastikan header.png wujud
+
+  await new Promise(resolve => {
+    headerImg.onload = () => {
+      const headerWidth = pageWidth - 2 * marginLeft;
+      const headerHeight = (headerImg.height / headerImg.width) * headerWidth;
+      doc.addImage(headerImg, 'PNG', marginLeft, 10, headerWidth, headerHeight);
+      resolve();
+    };
+  });
+
+  doc.setFont("Helvetica", "bold");
+  doc.setFontSize(14);
+  doc.text(t.section_applicant, marginLeft, y); y += lineHeight;
+
+  row("full_name", getValue("nama_penuh"));
+  row("gender", getValue("jantina"));
+  row("passport_no", getValue("no_pasport"));
+  row("nationality", getValue("warganegara") === "OTHER" ? getValue("other_nationality_input") : getValue("warganegara"));
+  row("pr_number", getValue("no_pr"));
+  row("pr_expiry", getValue("tarikh_mansuh_pr"));
+  row("email", getValue("email"));
+
+  y += 5;
+  doc.setFont("Helvetica", "bold");
+  doc.text(t.vehicle_info, marginLeft, y); y += lineHeight;
+
+  row("brand_model", getValue("jenama_model"));
+  row("engine_no", getValue("no_enjin"));
+  row("chassis_no", getValue("no_rangka"));
+  row("year_made", getValue("tahun_dibentuk"));
+  row("body_type", getValue("jenis_badan"));
+  row("insurance_no", getValue("no_insuran"));
+  row("insurance_expiry", getValue("tarikh_luput_insuran"));
+
+  y += 5;
+  doc.setFont("Helvetica", "bold");
+  doc.text(t.travel_info, marginLeft, y); y += lineHeight;
+
+  row("malaysia_address", getValue("alamat_malaysia"));
+  row("arrival_date", getValue("tarikh_tiba"));
+
+  y += 12;
+  doc.setFont("Helvetica", "bold");
+  doc.setFontSize(11);
+  doc.text(t.declaration, marginLeft, y, { maxWidth: pageWidth - 2 * marginLeft });
+
+  const today = new Date();
+  const dateString = today.toLocaleDateString(lang === "ms" ? "ms-MY" : "en-GB", {
+    day: 'numeric', month: 'long', year: 'numeric'
+  });
+
+  doc.setFont("Helvetica", "normal");
+  doc.setFontSize(10);
+  doc.text(`Tarikh Cetakan: ${dateString}`, pageWidth - marginLeft, pageHeight - 10, { align: "right" });
+
+  const nama = getValue("nama_penuh").replace(/\s+/g, "_") || "borang";
+  doc.save(`Borang_${nama}.pdf`);
+}
