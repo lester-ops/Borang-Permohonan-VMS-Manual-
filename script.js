@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
 
-    const emailInput = document.getElementById('Email');
+    const emailInput = document.getElementById('email');
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value)) {
       alert("Sila masukkan alamat e-mel yang sah.");
       emailInput.focus();
