@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
 
-    const tahunInput = document.getElementById('TahunDibentuk');
+    const tahunInput = document.getElementById('tahun_dibentuk');
     const tahunValue = parseInt(tahunInput.value, 10);
     const currentYear = new Date().getFullYear();
     if (tahunInput.value && (isNaN(tahunValue) || tahunValue < 1900 || tahunValue > currentYear)) {
