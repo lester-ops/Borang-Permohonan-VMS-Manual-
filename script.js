@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
 
-    const requiredFields = form.querySelectorAll('[required]');
+     const requiredFields = form.querySelectorAll('[required]');
     for (const field of requiredFields) {
       if (field.closest('.hidden-fields')?.style.display === 'none') continue;
       if (!field.value.trim()) {
@@ -136,6 +136,10 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     const emailInput = document.getElementById('email');
+    if (!emailInput) {
+      alert("Email input tidak dijumpai!");
+      return;
+    }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value)) {
       alert("Sila masukkan alamat e-mel yang sah.");
       emailInput.focus();
@@ -143,6 +147,11 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     const tahunInput = document.getElementById('tahun_dibentuk');
+    if (!tahunInput) {
+      alert("Elemen tahun_dibentuk tidak dijumpai!");
+      return;
+    }
+
     const tahunValue = parseInt(tahunInput.value, 10);
     const currentYear = new Date().getFullYear();
     if (tahunInput.value && (isNaN(tahunValue) || tahunValue < 1900 || tahunValue > currentYear)) {
@@ -151,7 +160,7 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
 
-    const scriptURL = "https://script.google.com/macros/s/AKfycbxUBb3-H5ZOn596HMpAQTEMi-0jgaD7JG2-GkAwzgcFfhim_25cUM1VFXdY4dQxAItKbw/exec";
+    const scriptURL = "https://script.google.com/macros/s/YOUR_DEPLOYED_URL/exec";
     const formData = new FormData(form);
 
     const otherValue = document.getElementById("other_nationality_input")?.value || "";
@@ -168,14 +177,11 @@ document.addEventListener('DOMContentLoaded', function () {
       const response = await fetch(scriptURL, {
         method: "POST",
         body: formData,
-        headers: {
-          "Accept": "application/json"
-        }
+        headers: { "Accept": "application/json" }
       });
 
       if (response.ok) {
         alert("Permohonan berjaya dihantar.");
-        // generatePDF(); // Aktifkan jika perlu
         form.reset();
         submitBtn.disabled = true;
         grecaptcha.reset();
@@ -247,14 +253,13 @@ document.addEventListener('DOMContentLoaded', function () {
   form.addEventListener('submit', validateForm);
 
   function initializePage() {
-    populateCountryList(); // ✅ DIPANGGIL DI SINI
+    populateCountryList();
     hideAllOptionalFields();
     submitBtn.disabled = true;
     applyTranslation(currentLang);
     langToggle.value = currentLang;
   }
 
-  
   initializePage();
 });
 
