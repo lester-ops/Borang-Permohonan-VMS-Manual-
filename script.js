@@ -108,98 +108,77 @@ document.addEventListener('DOMContentLoaded', function () {
 
   async function validateForm(e) {
     e.preventDefault();
-    const t = translations[currentLang];
 
-      // -- Jadikan 'Nama Penuh' dan 'No. Pasport' huruf besar (uppercase) --
-  const namaInput = document.getElementById("nama_penuh");
-  const passportInput = document.getElementById("nombor_pasport");
+    const namaInput = document.getElementById("NamaPenuh");
+    const passportInput = document.getElementById("no_pasport");
+    const alamatMalaysia = document.getElementById("AlamatMalaysia");
 
-  if (namaInput) {
-    namaInput.value = namaInput.value.toUpperCase();
-  }
-
-  if (passportInput) {
-    passportInput.value = passportInput.value.toUpperCase();
-  }
-
-    const alamatMalaysia = document.getElementById("alamat_malaysia");
-if (alamatMalaysia) {
-  alamatMalaysia.value = alamatMalaysia.value.toUpperCase();
-}
-
+    if (namaInput) namaInput.value = namaInput.value.toUpperCase();
+    if (passportInput) passportInput.value = passportInput.value.toUpperCase();
+    if (alamatMalaysia) alamatMalaysia.value = alamatMalaysia.value.toUpperCase();
 
     if (!confirmCheckbox.checked) {
-      alert(t.alert_confirm);
+      alert("Sila tandakan pengesahan sebelum menghantar.");
       confirmCheckbox.focus();
       return;
     }
 
     const requiredFields = form.querySelectorAll('[required]');
     for (const field of requiredFields) {
-      if (field.closest('.hidden-fields') && field.closest('.hidden-fields').style.display === 'none') {
-        continue;
-      }
-
+      if (field.closest('.hidden-fields')?.style.display === 'none') continue;
       if (!field.value.trim()) {
         const label = form.querySelector(`label[for="${field.id}"]`);
-        let fieldName = field.name;
-        if (label) {
-          const key = label.getAttribute('data-key');
-          fieldName = t[key] || field.name;
-        }
-        alert(`${t.alert_required}${fieldName}`);
+        let fieldName = label?.textContent || field.name;
+        alert("Sila isi maklumat di ruangan: " + fieldName);
         field.focus();
         return;
       }
     }
 
-    const emailInput = document.getElementById('email');
+    const emailInput = document.getElementById('Email');
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value)) {
-      alert(t.alert_invalid_email);
+      alert("Sila masukkan alamat e-mel yang sah.");
       emailInput.focus();
       return;
     }
 
-    const tahunInput = document.getElementById('tahun_dibentuk');
+    const tahunInput = document.getElementById('TahunDibentuk');
     const tahunValue = parseInt(tahunInput.value, 10);
     const currentYear = new Date().getFullYear();
     if (tahunInput.value && (isNaN(tahunValue) || tahunValue < 1900 || tahunValue > currentYear)) {
-      alert(t.alert_invalid_year(currentYear));
+      alert(`Sila masukkan tahun yang sah antara 1900 dan ${currentYear}.`);
       tahunInput.focus();
       return;
     }
 
-    const scriptURL = "https://script.google.com/macros/s/AKfycbxUBb3-H5ZOn596HMpAQTEMi-0jgaD7JG2-GkAwzgcFfhim_25cUM1VFXdY4dQxAItKbw/exec";
-
+    const scriptURL = "https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec";
     const formData = new FormData(form);
 
-    if (formData.get("Warganegara") === "OTHER") {
-      const other = document.getElementById("other_nationality_input").value;
-      formData.set("WarganegaraLain", other);
+    const otherValue = document.getElementById("other_nationality_input")?.value || "";
+    formData.set("WarganegaraLain", otherValue);
+
+    const token = grecaptcha.getResponse();
+    if (!token) {
+      alert("⚠️ Sila sahkan bahawa anda bukan robot (reCAPTCHA).");
+      return;
     }
+    formData.append('g-recaptcha-response', token);
 
     try {
-  const token = grecaptcha.getResponse();
-
-  if (!token) {
-    alert("⚠️ Sila sahkan bahawa anda bukan robot (reCAPTCHA).");
-    return;
-  }
-
-  formData.append('g-recaptcha-response', token);
-
-  const response = await fetch(scriptURL, {
-    method: "POST",
-    body: formData
-  });
-
+      const response = await fetch(scriptURL, {
+        method: "POST",
+        body: formData,
+        headers: {
+          "Accept": "application/json"
+        }
+      });
 
       if (response.ok) {
-        alert(t.alert_success);
-      await generatePDF();
+        alert("Permohonan berjaya dihantar.");
+        // generatePDF(); // Aktifkan jika perlu
         form.reset();
-        hideAllOptionalFields();
         submitBtn.disabled = true;
+        grecaptcha.reset();
       } else {
         alert("⚠️ Ralat semasa menghantar borang.");
       }
