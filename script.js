@@ -284,51 +284,57 @@ if (alamatMalaysia) {
 async function generatePDF() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF('p', 'mm', 'a4');
-  const pageWidth = doc.internal.pageSize.getWidth();
-  const pageHeight = doc.internal.pageSize.getHeight();
-  const margin = 15;
-  let y = 50; // bawah header
-  const lineHeight = 8;
-  const labelX = margin;
-  const valueX = pageWidth - margin;
 
+  // ⚙️ Tetapan asas halaman PDF
+  const pageWidth = doc.internal.pageSize.getWidth();   // Lebar A4 = 210mm
+  const pageHeight = doc.internal.pageSize.getHeight(); // Tinggi A4 = 297mm
+
+  // ✅ Posisi dan gaya
+  const marginLeft = 25; // 🟡 Label kriteria (labelX) — gerakkan ke kanan jika mahu selari dengan logo
+  const valueX = pageWidth / 2 + 20; // 🟡 Posisi jawapan — selarikan ke kanan
+  let y = 60; // 🟡 Posisi permulaan selepas logo — naik/turun jika mahu tambah ruang
+  const lineHeight = 8; // 🟡 Jarak antara setiap baris maklumat
+
+  // 🔠 Tajuk seksyen tengah + garis bawah
   const boldCenterTitle = (text) => {
     doc.setFont("Helvetica", "bold");
     doc.setFontSize(14);
     const textWidth = doc.getTextWidth(text);
-    const centerX = (pageWidth - textWidth) / 2;
+    const centerX = (pageWidth - textWidth) / 2; // 🟡 Letakkan tajuk di tengah halaman
     doc.text(text, centerX, y);
     y += 2;
     doc.setDrawColor(0);
     doc.setLineWidth(0.5);
-    doc.line(margin, y, pageWidth - margin, y);
+    doc.line(marginLeft, y, pageWidth - marginLeft, y); // 🟡 Garisan bawah tajuk
     y += lineHeight;
   };
 
+  // 🏷️ Satu baris maklumat: label kiri + jawapan kanan
   const row = (label, value) => {
     doc.setFont("Helvetica", "normal");
     doc.setFontSize(11);
-    doc.text(label + ":", labelX, y);
-    doc.text(value || "-", valueX, y, { align: "right" });
+    doc.text(label + ":", marginLeft, y); // 🟡 Label di margin kiri
+    doc.text(value || "-", valueX, y);    // 🟡 Jawapan di tengah kanan
     y += lineHeight;
   };
 
+  // 🧾 Fungsi ambil nilai dari input
   const getValue = (id) => document.getElementById(id)?.value?.toUpperCase() || "-";
 
-  // 🖼️ Header penuh
+  // 🖼️ Tambah gambar header/logo penuh
   const headerImg = new Image();
   headerImg.src = 'header.png';
 
   await new Promise((resolve) => {
     headerImg.onload = () => {
-      const headerWidth = pageWidth - 2 * margin;
+      const headerWidth = pageWidth - 2 * marginLeft; // 🟡 Saiz lebar gambar
       const headerHeight = (headerImg.height / headerImg.width) * headerWidth;
-      doc.addImage(headerImg, 'PNG', margin, 10, headerWidth, headerHeight);
+      doc.addImage(headerImg, 'PNG', marginLeft, 10, headerWidth, headerHeight); // 🟡 '10' = jarak dari atas
       resolve();
     };
   });
 
-  // --- Maklumat Pemohon ---
+  // ✏️ Maklumat Pemohon
   boldCenterTitle("Maklumat Pemohon");
   row("Nama Penuh", getValue("nama_penuh"));
   row("Jantina", getValue("jantina"));
@@ -338,8 +344,8 @@ async function generatePDF() {
   row("Tarikh Mansuh PR / Pas Kerja", getValue("tarikh_mansuh_pr"));
   row("E-mel", getValue("email"));
 
-  // --- Maklumat Kenderaan ---
-  y += 5;
+  // ✏️ Maklumat Kenderaan
+  y += 5; // 🟡 Jarak antara seksyen
   boldCenterTitle("Maklumat Kenderaan");
   row("Jenama / Model", getValue("jenama_model"));
   row("Nombor Enjin", getValue("no_enjin"));
@@ -349,30 +355,36 @@ async function generatePDF() {
   row("Nombor Insuran", getValue("no_insuran"));
   row("Tarikh Luput Insuran", getValue("tarikh_luput_insuran"));
 
-  // --- Maklumat Perjalanan ---
+  // ✏️ Maklumat Perjalanan
   y += 5;
   boldCenterTitle("Maklumat Perjalanan");
   row("Alamat Lengkap di Malaysia", getValue("alamat_malaysia"));
   row("Tarikh Jangka Tiba", getValue("tarikh_tiba"));
 
-  // --- Pengesahan ---
-  y += 5;
+  // ✅ Ayat pengesahan — diturunkan sedikit supaya ada jarak
+  y += 12;
   doc.setFont("Helvetica", "bold");
   doc.setFontSize(11);
-  doc.text("Saya dengan ini mengesahkan bahawa butir-butir yang diberikan adalah betul dan akan mematuhi syarat-syarat yang ditetapkan.", margin, y, { maxWidth: pageWidth - 2 * margin });
+  const pengesahanText = "Saya dengan ini mengesahkan bahawa butir-butir yang diberikan adalah betul dan akan mematuhi syarat-syarat yang ditetapkan.";
+  doc.text(pengesahanText, marginLeft, y, {
+    maxWidth: pageWidth - 2 * marginLeft
+  });
 
-  // --- Tarikh Cetakan di kanan bawah ---
+  // 🕒 Tarikh Cetakan (footer kanan bawah)
   const today = new Date();
   const options = { day: 'numeric', month: 'long', year: 'numeric' };
-  const tarikhCetakan = today.toLocaleDateString('ms-MY', options); // contoh: 6 Ogos 2025
+  const tarikhCetakan = today.toLocaleDateString('ms-MY', options);
   doc.setFont("Helvetica", "normal");
   doc.setFontSize(10);
-  doc.text(`Tarikh Cetakan: ${tarikhCetakan}`, pageWidth - margin, pageHeight - 10, { align: "right" });
+  doc.text(`Tarikh Cetakan: ${tarikhCetakan}`, pageWidth - marginLeft, pageHeight - 10, {
+    align: "right"
+  });
 
-  // Simpan
+  // 💾 Simpan fail PDF
   const nama = getValue("nama_penuh").replace(/\s+/g, "_") || "borang";
   doc.save(`Borang_${nama}.pdf`);
 }
+
 
 
 
