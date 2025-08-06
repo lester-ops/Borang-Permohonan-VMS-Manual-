@@ -289,6 +289,10 @@ async function generatePDF() {
   const pageWidth = doc.internal.pageSize.getWidth();   // Lebar A4 = 210mm
   const pageHeight = doc.internal.pageSize.getHeight(); // Tinggi A4 = 297mm
 
+  // 🌐 Dapatkan bahasa semasa dan terjemahan (BM/EN)
+  const lang = typeof currentLang !== 'undefined' ? currentLang : 'ms';
+  const t = translations[lang];
+
   // ✅ Posisi dan gaya
   const marginLeft = 25; // 🟡 Label kriteria (labelX) — gerakkan ke kanan jika mahu selari dengan logo
   const valueX = pageWidth / 2 + 20; // 🟡 Posisi jawapan — selarikan ke kanan
@@ -310,15 +314,16 @@ async function generatePDF() {
   };
 
   // 🏷️ Satu baris maklumat: label kiri + jawapan kanan
-  const row = (label, value) => {
+  const row = (labelKey, value) => {
     doc.setFont("Helvetica", "normal");
     doc.setFontSize(11);
-    doc.text(label + ":", marginLeft, y); // 🟡 Label di margin kiri
-    doc.text(value || "-", valueX, y);    // 🟡 Jawapan di tengah kanan
+    const label = t[labelKey] || labelKey; // 🔄 Dapatkan terjemahan berdasarkan kunci
+    doc.text(label + ":", marginLeft, y);  // 🟡 Label di margin kiri
+    doc.text(value || "-", valueX, y);     // 🟡 Jawapan di tengah kanan
     y += lineHeight;
   };
 
-  // 🧾 Fungsi ambil nilai dari input
+  // 🧾 Fungsi ambil nilai dari input borang
   const getValue = (id) => document.getElementById(id)?.value?.toUpperCase() || "-";
 
   // 🖼️ Tambah gambar header/logo penuh
@@ -335,55 +340,57 @@ async function generatePDF() {
   });
 
   // ✏️ Maklumat Pemohon
-  boldCenterTitle("Maklumat Pemohon");
-  row("Nama Penuh", getValue("nama_penuh"));
-  row("Jantina", getValue("jantina"));
-  row("Nombor Pasport", getValue("no_pasport"));
-  row("Warganegara", getValue("warganegara") === "OTHER" ? getValue("other_nationality_input") : getValue("warganegara"));
-  row("No PR / Pas Kerja", getValue("no_pr"));
-  row("Tarikh Mansuh PR / Pas Kerja", getValue("tarikh_mansuh_pr"));
-  row("E-mel", getValue("email"));
+  boldCenterTitle(t.section_applicant); // Tajuk seksyen ikut bahasa
+  row("full_name", getValue("nama_penuh"));
+  row("gender", getValue("jantina"));
+  row("passport_no", getValue("no_pasport"));
+  row("nationality", getValue("warganegara") === "OTHER" ? getValue("other_nationality_input") : getValue("warganegara"));
+  row("pr_number", getValue("no_pr"));
+  row("pr_expiry", getValue("tarikh_mansuh_pr"));
+  row("email", getValue("email"));
 
   // ✏️ Maklumat Kenderaan
   y += 5; // 🟡 Jarak antara seksyen
-  boldCenterTitle("Maklumat Kenderaan");
-  row("Jenama / Model", getValue("jenama_model"));
-  row("Nombor Enjin", getValue("no_enjin"));
-  row("Nombor Rangka", getValue("no_rangka"));
-  row("Tahun Dibentuk", getValue("tahun_dibentuk"));
-  row("Jenis Badan", getValue("jenis_badan"));
-  row("Nombor Insuran", getValue("no_insuran"));
-  row("Tarikh Luput Insuran", getValue("tarikh_luput_insuran"));
+  boldCenterTitle(t.vehicle_info);
+  row("brand_model", getValue("jenama_model"));
+  row("engine_no", getValue("no_enjin"));
+  row("chassis_no", getValue("no_rangka"));
+  row("year_made", getValue("tahun_dibentuk"));
+  row("body_type", getValue("jenis_badan"));
+  row("insurance_no", getValue("no_insuran"));
+  row("insurance_expiry", getValue("tarikh_luput_insuran"));
 
   // ✏️ Maklumat Perjalanan
   y += 5;
-  boldCenterTitle("Maklumat Perjalanan");
-  row("Alamat Lengkap di Malaysia", getValue("alamat_malaysia"));
-  row("Tarikh Jangka Tiba", getValue("tarikh_tiba"));
+  boldCenterTitle(t.travel_info);
+  row("malaysia_address", getValue("alamat_malaysia"));
+  row("arrival_date", getValue("tarikh_tiba"));
 
   // ✅ Ayat pengesahan — diturunkan sedikit supaya ada jarak
   y += 12;
   doc.setFont("Helvetica", "bold");
   doc.setFontSize(11);
-  const pengesahanText = "Saya dengan ini mengesahkan bahawa butir-butir yang diberikan adalah betul dan akan mematuhi syarat-syarat yang ditetapkan.";
-  doc.text(pengesahanText, marginLeft, y, {
+  doc.text(t.declaration, marginLeft, y, {
     maxWidth: pageWidth - 2 * marginLeft
   });
 
-  // 🕒 Tarikh Cetakan (footer kanan bawah)
+  // 🕒 Tarikh Cetakan (footer kanan bawah) ikut bahasa
   const today = new Date();
-  const options = { day: 'numeric', month: 'long', year: 'numeric' };
-  const tarikhCetakan = today.toLocaleDateString('ms-MY', options);
+  const dateString = today.toLocaleDateString(lang === "ms" ? "ms-MY" : "en-GB", {
+    day: 'numeric', month: 'long', year: 'numeric'
+  });
+
   doc.setFont("Helvetica", "normal");
   doc.setFontSize(10);
-  doc.text(`Tarikh Cetakan: ${tarikhCetakan}`, pageWidth - marginLeft, pageHeight - 10, {
+  doc.text(`${lang === "ms" ? "Tarikh Cetakan" : "Date Printed"}: ${dateString}`, pageWidth - marginLeft, pageHeight - 10, {
     align: "right"
   });
 
-  // 💾 Simpan fail PDF
+  // 💾 Simpan fail PDF berdasarkan nama pemohon
   const nama = getValue("nama_penuh").replace(/\s+/g, "_") || "borang";
   doc.save(`Borang_${nama}.pdf`);
 }
+
 
 
 
