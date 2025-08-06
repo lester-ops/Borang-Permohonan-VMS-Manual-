@@ -181,11 +181,12 @@ document.addEventListener('DOMContentLoaded', function () {
       });
 
       if (response.ok) {
-        alert("Permohonan berjaya dihantar.");
-        form.reset();
-        submitBtn.disabled = true;
-        grecaptcha.reset();
-      } else {
+  alert("Permohonan berjaya dihantar.");
+  await generatePDF(); // ✅ aktifkan
+  form.reset();
+  submitBtn.disabled = true;
+  grecaptcha.reset();
+} else {
         alert("⚠️ Ralat semasa menghantar borang.");
       }
     } catch (error) {
