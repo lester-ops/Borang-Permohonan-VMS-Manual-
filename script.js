@@ -285,95 +285,94 @@ async function generatePDF() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF('p', 'mm', 'a4');
   const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
   const margin = 15;
-  let y = 45; // Start below the logo
+  let y = 50; // bawah header
+  const lineHeight = 8;
+  const labelX = margin;
+  const valueX = pageWidth - margin;
 
-  const lineHeight = 7;
-
-  const bold = (text, size = 12) => {
+  const boldCenterTitle = (text) => {
     doc.setFont("Helvetica", "bold");
-    doc.setFontSize(size);
-    doc.text(text, margin, y);
+    doc.setFontSize(14);
+    const textWidth = doc.getTextWidth(text);
+    const centerX = (pageWidth - textWidth) / 2;
+    doc.text(text, centerX, y);
+    y += 2;
+    doc.setDrawColor(0);
+    doc.setLineWidth(0.5);
+    doc.line(margin, y, pageWidth - margin, y);
     y += lineHeight;
   };
 
-  const normal = (label, value, size = 11) => {
+  const row = (label, value) => {
     doc.setFont("Helvetica", "normal");
-    doc.setFontSize(size);
-    doc.text(`${label}: ${value}`, margin + 5, y);
+    doc.setFontSize(11);
+    doc.text(label + ":", labelX, y);
+    doc.text(value || "-", valueX, y, { align: "right" });
     y += lineHeight;
   };
 
-  const drawSectionBox = (title, contentCallback) => {
-    const boxStartY = y;
-    bold(title);
-    contentCallback();
-    const boxEndY = y;
-    doc.rect(margin - 5, boxStartY - lineHeight + 2, 180, boxEndY - boxStartY + lineHeight, 'S');
-    y += 4;
-  };
+  const getValue = (id) => document.getElementById(id)?.value?.toUpperCase() || "-";
 
-  const getValue = (id) => document.getElementById(id)?.value || "-";
-
-  // 🖼️ Masukkan logo di atas
-  const logo = new Image();
-  logo.src = 'header.png';
+  // 🖼️ Header penuh
+  const headerImg = new Image();
+  headerImg.src = 'header.png';
 
   await new Promise((resolve) => {
-    logo.onload = () => {
-      const logoWidth = 60;
-      const logoHeight = (logo.height / logo.width) * logoWidth;
-      const x = (pageWidth - logoWidth) / 2;
-      doc.addImage(logo, 'PNG', x, 10, logoWidth, logoHeight);
+    headerImg.onload = () => {
+      const headerWidth = pageWidth - 2 * margin;
+      const headerHeight = (headerImg.height / headerImg.width) * headerWidth;
+      doc.addImage(headerImg, 'PNG', margin, 10, headerWidth, headerHeight);
       resolve();
     };
   });
 
-  // 🗓️ Tarikh cetakan di kanan atas
+  // --- Maklumat Pemohon ---
+  boldCenterTitle("Maklumat Pemohon");
+  row("Nama Penuh", getValue("nama_penuh"));
+  row("Jantina", getValue("jantina"));
+  row("Nombor Pasport", getValue("no_pasport"));
+  row("Warganegara", getValue("warganegara") === "OTHER" ? getValue("other_nationality_input") : getValue("warganegara"));
+  row("No PR / Pas Kerja", getValue("no_pr"));
+  row("Tarikh Mansuh PR / Pas Kerja", getValue("tarikh_mansuh_pr"));
+  row("E-mel", getValue("email"));
+
+  // --- Maklumat Kenderaan ---
+  y += 5;
+  boldCenterTitle("Maklumat Kenderaan");
+  row("Jenama / Model", getValue("jenama_model"));
+  row("Nombor Enjin", getValue("no_enjin"));
+  row("Nombor Rangka", getValue("no_rangka"));
+  row("Tahun Dibentuk", getValue("tahun_dibentuk"));
+  row("Jenis Badan", getValue("jenis_badan"));
+  row("Nombor Insuran", getValue("no_insuran"));
+  row("Tarikh Luput Insuran", getValue("tarikh_luput_insuran"));
+
+  // --- Maklumat Perjalanan ---
+  y += 5;
+  boldCenterTitle("Maklumat Perjalanan");
+  row("Alamat Lengkap di Malaysia", getValue("alamat_malaysia"));
+  row("Tarikh Jangka Tiba", getValue("tarikh_tiba"));
+
+  // --- Pengesahan ---
+  y += 5;
+  doc.setFont("Helvetica", "bold");
+  doc.setFontSize(11);
+  doc.text("Saya dengan ini mengesahkan bahawa butir-butir yang diberikan adalah betul dan akan mematuhi syarat-syarat yang ditetapkan.", margin, y, { maxWidth: pageWidth - 2 * margin });
+
+  // --- Tarikh Cetakan di kanan bawah ---
   const today = new Date();
   const options = { day: 'numeric', month: 'long', year: 'numeric' };
   const tarikhCetakan = today.toLocaleDateString('ms-MY', options); // contoh: 6 Ogos 2025
   doc.setFont("Helvetica", "normal");
   doc.setFontSize(10);
-  doc.text(`Tarikh Cetakan: ${tarikhCetakan}`, pageWidth - margin - 50, 18);
+  doc.text(`Tarikh Cetakan: ${tarikhCetakan}`, pageWidth - margin, pageHeight - 10, { align: "right" });
 
-  // --------- MAKLUMAT PEMOHON ------------
-  drawSectionBox("Maklumat Pemohon", () => {
-    normal("Nama Penuh", getValue("nama_penuh"));
-    normal("Jantina", getValue("jantina"));
-    normal("Nombor Pasport", getValue("no_pasport"));
-    normal("Warganegara", getValue("warganegara") === "OTHER" ? getValue("other_nationality_input") : getValue("warganegara"));
-    normal("No PR / Pas Kerja", getValue("no_pr"));
-    normal("Tarikh Mansuh PR / Pas Kerja", getValue("tarikh_mansuh_pr"));
-    normal("E-mel", getValue("email"));
-  });
-
-  // --------- MAKLUMAT KENDERAAN ------------
-  drawSectionBox("Maklumat Kenderaan", () => {
-    normal("Jenama / Model", getValue("jenama_model"));
-    normal("Nombor Enjin", getValue("no_enjin"));
-    normal("Nombor Rangka", getValue("no_rangka"));
-    normal("Tahun Dibentuk", getValue("tahun_dibentuk"));
-    normal("Jenis Badan", getValue("jenis_badan"));
-    normal("Nombor Insuran", getValue("no_insuran"));
-    normal("Tarikh Luput Insuran", getValue("tarikh_luput_insuran"));
-  });
-
-  // --------- MAKLUMAT PERJALANAN ------------
-  drawSectionBox("Maklumat Perjalanan", () => {
-    normal("Alamat Lengkap di Malaysia", getValue("alamat_malaysia"));
-    normal("Tarikh Jangka Tiba", getValue("tarikh_tiba"));
-  });
-
-  // --------- PENGESAHAN ------------
-  y += 5;
-  doc.setFont("Helvetica", "bold");
-  doc.setFontSize(11);
-  doc.text("Saya dengan ini mengesahkan bahawa butir-butir yang diberikan adalah betul dan akan mematuhi syarat-syarat yang ditetapkan.", margin, y, { maxWidth: 180 });
-
-  // 💾 Simpan PDF
+  // Simpan
   const nama = getValue("nama_penuh").replace(/\s+/g, "_") || "borang";
   doc.save(`Borang_${nama}.pdf`);
 }
+
 
 
