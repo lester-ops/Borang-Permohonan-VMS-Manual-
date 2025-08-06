@@ -248,7 +248,7 @@ async function generatePDF() {
   const doc = new jsPDF('p', 'mm', 'a4');
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
-  const lang = typeof currentLang !== 'undefined' ? currentLang : 'ms';
+  const lang = document.getElementById('language-select')?.value || 'ms';
   const t = translations[lang];
 
   const marginLeft = 25;
