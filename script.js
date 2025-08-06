@@ -283,36 +283,97 @@ if (alamatMalaysia) {
 
 async function generatePDF() {
   const { jsPDF } = window.jspdf;
-  const pdfContent = document.getElementById("pdf-content");
+  const doc = new jsPDF('p', 'mm', 'a4');
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const margin = 15;
+  let y = 45; // Start below the logo
 
-  const disclaimer = document.querySelector('.disclaimer-with-checkbox');
-  const recaptcha = document.querySelector('.g-recaptcha');
-  const submitBtn = document.getElementById("submitBtn");
+  const lineHeight = 7;
 
-  if (disclaimer) disclaimer.style.display = "none";
-  if (recaptcha) recaptcha.style.display = "none";
-  if (submitBtn) submitBtn.style.display = "none";
+  const bold = (text, size = 12) => {
+    doc.setFont("Helvetica", "bold");
+    doc.setFontSize(size);
+    doc.text(text, margin, y);
+    y += lineHeight;
+  };
 
-  const canvas = await html2canvas(pdfContent, {
-    scale: 2,
-    useCORS: true,
-    windowWidth: pdfContent.scrollWidth,
+  const normal = (label, value, size = 11) => {
+    doc.setFont("Helvetica", "normal");
+    doc.setFontSize(size);
+    doc.text(`${label}: ${value}`, margin + 5, y);
+    y += lineHeight;
+  };
+
+  const drawSectionBox = (title, contentCallback) => {
+    const boxStartY = y;
+    bold(title);
+    contentCallback();
+    const boxEndY = y;
+    doc.rect(margin - 5, boxStartY - lineHeight + 2, 180, boxEndY - boxStartY + lineHeight, 'S');
+    y += 4;
+  };
+
+  const getValue = (id) => document.getElementById(id)?.value || "-";
+
+  // 🖼️ Masukkan logo di atas
+  const logo = new Image();
+  logo.src = 'header.png';
+
+  await new Promise((resolve) => {
+    logo.onload = () => {
+      const logoWidth = 60;
+      const logoHeight = (logo.height / logo.width) * logoWidth;
+      const x = (pageWidth - logoWidth) / 2;
+      doc.addImage(logo, 'PNG', x, 10, logoWidth, logoHeight);
+      resolve();
+    };
   });
 
-  const imgData = canvas.toDataURL("image/png");
-  const pdf = new jsPDF("p", "mm", "a4");
-  const pdfWidth = pdf.internal.pageSize.getWidth();
-  const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+  // 🗓️ Tarikh cetakan di kanan atas
+  const today = new Date();
+  const options = { day: 'numeric', month: 'long', year: 'numeric' };
+  const tarikhCetakan = today.toLocaleDateString('ms-MY', options); // contoh: 6 Ogos 2025
+  doc.setFont("Helvetica", "normal");
+  doc.setFontSize(10);
+  doc.text(`Tarikh Cetakan: ${tarikhCetakan}`, pageWidth - margin - 50, 18);
 
-  pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+  // --------- MAKLUMAT PEMOHON ------------
+  drawSectionBox("Maklumat Pemohon", () => {
+    normal("Nama Penuh", getValue("nama_penuh"));
+    normal("Jantina", getValue("jantina"));
+    normal("Nombor Pasport", getValue("no_pasport"));
+    normal("Warganegara", getValue("warganegara") === "OTHER" ? getValue("other_nationality_input") : getValue("warganegara"));
+    normal("No PR / Pas Kerja", getValue("no_pr"));
+    normal("Tarikh Mansuh PR / Pas Kerja", getValue("tarikh_mansuh_pr"));
+    normal("E-mel", getValue("email"));
+  });
 
-  const nama = document.getElementById("nama_penuh")?.value || "borang";
-  const namaFail = `Borang_${nama.replace(/\s+/g, "_")}.pdf`;
+  // --------- MAKLUMAT KENDERAAN ------------
+  drawSectionBox("Maklumat Kenderaan", () => {
+    normal("Jenama / Model", getValue("jenama_model"));
+    normal("Nombor Enjin", getValue("no_enjin"));
+    normal("Nombor Rangka", getValue("no_rangka"));
+    normal("Tahun Dibentuk", getValue("tahun_dibentuk"));
+    normal("Jenis Badan", getValue("jenis_badan"));
+    normal("Nombor Insuran", getValue("no_insuran"));
+    normal("Tarikh Luput Insuran", getValue("tarikh_luput_insuran"));
+  });
 
-  pdf.save(namaFail);
+  // --------- MAKLUMAT PERJALANAN ------------
+  drawSectionBox("Maklumat Perjalanan", () => {
+    normal("Alamat Lengkap di Malaysia", getValue("alamat_malaysia"));
+    normal("Tarikh Jangka Tiba", getValue("tarikh_tiba"));
+  });
 
-  if (disclaimer) disclaimer.style.display = "block";
-  if (recaptcha) recaptcha.style.display = "block";
-  if (submitBtn) submitBtn.style.display = "inline-block";
+  // --------- PENGESAHAN ------------
+  y += 5;
+  doc.setFont("Helvetica", "bold");
+  doc.setFontSize(11);
+  doc.text("Saya dengan ini mengesahkan bahawa butir-butir yang diberikan adalah betul dan akan mematuhi syarat-syarat yang ditetapkan.", margin, y, { maxWidth: 180 });
+
+  // 💾 Simpan PDF
+  const nama = getValue("nama_penuh").replace(/\s+/g, "_") || "borang";
+  doc.save(`Borang_${nama}.pdf`);
 }
+
 
