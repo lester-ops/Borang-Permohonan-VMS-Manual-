@@ -242,32 +242,26 @@ document.addEventListener('DOMContentLoaded', function () {
   initializePage();
 });
 
-
 async function generatePDF() {
   const { jsPDF } = window.jspdf;
-  const doc = new jsPDF('p', 'mm', 'a4');
+  const doc = new jsPDF('p', 'mm', 'a4'); // A4 portrait
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
   const lang = document.getElementById('language-select')?.value || 'ms';
   const t = translations[lang];
 
-  const marginLeft = 25;
-  const valueX = pageWidth / 2 + 20;
-  let y = 60;
+  const marginLeft = 20;
+  const labelWidth = 50;
+  const valueX = marginLeft + labelWidth + 5;
+  let y = 55;
   const lineHeight = 8;
-
-  const row = (labelKey, value) => {
-    const label = t[labelKey] || labelKey;
-    doc.setFontSize(11);
-    doc.text(`${label}:`, marginLeft, y);
-    doc.text(value || '-', valueX, y);
-    y += lineHeight;
-  };
 
   const getValue = (id) => document.getElementById(id)?.value?.trim() || "-";
 
+  // ───────────────────────────────────────────────────────
+  // ⚠️ 1. MASUKKAN GAMBAR HEADER (LOGO KASTAM)
   const headerImg = new Image();
-  headerImg.src = 'header.png'; // Pastikan header.png wujud
+  headerImg.src = 'header.png'; // Pastikan header.png wujud di lokasi yang betul
 
   await new Promise(resolve => {
     headerImg.onload = () => {
@@ -278,10 +272,24 @@ async function generatePDF() {
     };
   });
 
+  // ───────────────────────────────────────────────────────
+  // ⚠️ 2. TAJUK SEKSYEN: Maklumat Pemohon
   doc.setFont("Helvetica", "bold");
-  doc.setFontSize(14);
-  doc.text(t.section_applicant, marginLeft, y); y += lineHeight;
+  doc.setFontSize(12);
+  doc.text(t.section_applicant, marginLeft, y);
+  y += lineHeight;
 
+  // Fungsi bantu untuk memaparkan baris label + nilai
+  const row = (labelKey, value) => {
+    const label = t[labelKey] || labelKey;
+    doc.setFont("Helvetica", "normal");
+    doc.setFontSize(11);
+    doc.text(`${label}:`, marginLeft, y);
+    doc.text(value || '-', valueX, y);
+    y += lineHeight;
+  };
+
+  // ─── 2A. Maklumat Pemohon
   row("full_name", getValue("nama_penuh"));
   row("gender", getValue("jantina"));
   row("passport_no", getValue("no_pasport"));
@@ -290,10 +298,15 @@ async function generatePDF() {
   row("pr_expiry", getValue("tarikh_mansuh_pr"));
   row("email", getValue("email"));
 
+  // ───────────────────────────────────────────────────────
+  // ⚠️ 3. TAJUK SEKSYEN: Maklumat Kenderaan
   y += 5;
   doc.setFont("Helvetica", "bold");
-  doc.text(t.vehicle_info, marginLeft, y); y += lineHeight;
+  doc.setFontSize(12);
+  doc.text(t.vehicle_info, marginLeft, y);
+  y += lineHeight;
 
+  // ─── 3A. Maklumat Kenderaan
   row("brand_model", getValue("jenama_model"));
   row("engine_no", getValue("no_enjin"));
   row("chassis_no", getValue("no_rangka"));
@@ -302,18 +315,33 @@ async function generatePDF() {
   row("insurance_no", getValue("no_insuran"));
   row("insurance_expiry", getValue("tarikh_luput_insuran"));
 
+  // ───────────────────────────────────────────────────────
+  // ⚠️ 4. TAJUK SEKSYEN: Maklumat Perjalanan
   y += 5;
   doc.setFont("Helvetica", "bold");
-  doc.text(t.travel_info, marginLeft, y); y += lineHeight;
+  doc.setFontSize(12);
+  doc.text(t.travel_info, marginLeft, y);
+  y += lineHeight;
 
-  row("malaysia_address", getValue("alamat_malaysia"));
+  // ─── 4A. Alamat dengan maxWidth supaya tidak langgar sempadan
+  const alamat = getValue("alamat_malaysia");
+  const splitAlamat = doc.splitTextToSize(`${t.malaysia_address}: ${alamat}`, pageWidth - 2 * marginLeft); // <-- wrap text
+  doc.setFont("Helvetica", "normal");
+  doc.setFontSize(11);
+  doc.text(splitAlamat, marginLeft, y);
+  y += lineHeight * splitAlamat.length;
+
   row("arrival_date", getValue("tarikh_tiba"));
 
+  // ───────────────────────────────────────────────────────
+  // ⚠️ 5. PENGAKUAN / DECLARATION
   y += 12;
   doc.setFont("Helvetica", "bold");
   doc.setFontSize(11);
   doc.text(t.declaration, marginLeft, y, { maxWidth: pageWidth - 2 * marginLeft });
 
+  // ───────────────────────────────────────────────────────
+  // ⚠️ 6. TARIKH CETAK
   const today = new Date();
   const dateString = today.toLocaleDateString(lang === "ms" ? "ms-MY" : "en-GB", {
     day: 'numeric', month: 'long', year: 'numeric'
@@ -323,6 +351,8 @@ async function generatePDF() {
   doc.setFontSize(10);
   doc.text(`Tarikh Cetakan: ${dateString}`, pageWidth - marginLeft, pageHeight - 10, { align: "right" });
 
+  // ───────────────────────────────────────────────────────
+  // ⚠️ 7. NAMA FAIL PDF
   const nama = getValue("nama_penuh").replace(/\s+/g, "_") || "borang";
   doc.save(`Borang_${nama}.pdf`);
 }
