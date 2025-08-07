@@ -242,6 +242,40 @@ document.addEventListener('DOMContentLoaded', function () {
   initializePage();
 });
 
+// ✅ Fungsi untuk jana tajuk seksyen dengan garisan bawah
+function sectionTitle(title) {
+  y += 6; // 🠕 Naikkan seksyen lebih dekat dengan tajuk sebelumnya
+  doc.setFont("Helvetica", "bold");
+  doc.setFontSize(12);
+
+  const centerX = pageWidth / 2;
+  doc.text(title, centerX, y, { align: "center" });
+
+  y += 2; // 🠕 Jarak sedikit antara tajuk dan garis
+  doc.setDrawColor(0);
+  doc.setLineWidth(0.5);
+  const headerWidth = pageWidth - 2 * marginLeft;
+  doc.line(marginLeft, y, marginLeft + headerWidth, y); // 🔧 Garis penuh ikut panjang header
+  y += 6; // 🠕 Jarak dari garis ke kandungan (label pertama)
+}
+
+// ✅ Fungsi untuk papar satu baris label dan jawapan
+function row(labelKey, value) {
+  const label = t[labelKey] || labelKey;
+  const labelX = marginLeft + 5; // ✅ Selarikan label ke kanan sedikit ikut logo
+  const labelY = y;
+
+  doc.setFont("Helvetica", "normal");
+  doc.setFontSize(11);
+  doc.text(`${label}:`, labelX, labelY);
+
+  // ✅ Jawapan disejajarkan lebih ke kanan agar ruang lebih tersusun
+  const valueX = pageWidth / 2 + 25; // ← Tambah jarak ke kanan untuk jawapan
+  doc.text(value || '-', valueX, labelY);
+
+  y += lineHeight - 1; // 🠗 Rapatkan label dan jawapan antara satu sama lain
+}
+
 // ✅ Fungsi utama jana PDF
 async function generatePDF() {
   const { jsPDF } = window.jspdf;
@@ -322,8 +356,9 @@ async function generatePDF() {
   doc.setFontSize(10);
   doc.text(`Tarikh Cetakan: ${dateString}`, pageWidth - marginLeft, pageHeight - 10, { align: "right" });
 
-  const nama = getValue("nama_penuh").replace(/\s+/g, "_") || "borang";
+  const nama = getValue("nama_penuh").replace(/\\s+/g, "_") || "borang";
   doc.save(`Borang_${nama}.pdf`);
 }
+
 
 
