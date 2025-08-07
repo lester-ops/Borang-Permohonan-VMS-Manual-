@@ -325,7 +325,7 @@ async function generatePDF() {
   const alamatLabel = t["malaysia_address"] + ":";
   const alamatValue = getValue("alamat_malaysia");
   const labelX = marginLeft + 10;
-  const valueX = labelX + 35;
+  const valueX = labelX + 65;
 
   doc.setFont("Helvetica", "normal");
   doc.setFontSize(11);
