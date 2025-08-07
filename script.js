@@ -276,7 +276,7 @@ async function generatePDF() {
   function row(labelKey, value) {
     const label = t[labelKey] || labelKey;
     const labelX = marginLeft + 10;         // ✅ Label ditolak ke kanan sedikit
-    const valueX = labelX + 35;             // ✅ Jawapan diletakkan 30mm dari label
+    const valueX = labelX + 65;             // ✅ Jawapan diletakkan 60mm dari label
     const labelY = y;
 
     doc.setFont("Helvetica", "normal");
