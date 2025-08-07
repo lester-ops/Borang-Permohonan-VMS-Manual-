@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title data-key="submit"> <!-- Tajuk boleh anda tetapkan secara statik atau melalui JS jika mahu -->Borang Pendaftaran Kenderaan</title>
+  <title data-key="submit">Borang Pendaftaran Kenderaan</title>
   <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,139 +17,140 @@
   </header>
 
   <div class="language-switcher" style="text-align: right; margin-bottom: 20px;">
-    <label for="language-select"><strong data-key="language_prompt">Bahasa / Language</strong></label>
+    <label for="language-select"><strong data-key="language_prompt">Bahasa:</strong></label>
     <select id="language-select">
       <option value="ms">Bahasa Melayu</option>
       <option value="en">English</option>
     </select>
   </div>
 
-  <form id="vehicleForm" action="#" method="POST">
-<div id="pdf-content">
-  <fieldset>
-    <legend data-key="section_applicant"></legend>
+  <form id="vehicleForm" action="#" method="POST" autocomplete="off">
+    <div id="pdf-content">
+      <fieldset>
+        <legend data-key="section_applicant">Maklumat Pemohon</legend>
 
-    <div class="form-group">
-      <label for="nama_penuh" data-key="full_name"></label>
-      <input type="text" id="nama_penuh" name="NamaPenuh" class="uppercase" required>
+        <div class="form-group">
+          <label for="nama_penuh" data-key="full_name">Nama Penuh</label>
+          <input type="text" id="nama_penuh" name="NamaPenuh" class="uppercase" required autocomplete="name">
+        </div>
+
+        <div class="form-group">
+          <label for="jantina" data-key="gender">Jantina</label>
+          <select id="jantina" name="Jantina" required autocomplete="sex">
+            <option value="" disabled selected>Sila pilih jantina</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="no_pasport" data-key="passport_no">No. Pasport</label>
+          <input type="text" id="no_pasport" name="NoPasport" class="uppercase" required autocomplete="off">
+        </div>
+
+        <div class="form-group">
+          <label for="warganegara" data-key="nationality">Warganegara</label>
+          <select id="warganegara" name="Warganegara" required autocomplete="country-name">
+            <option value="" disabled selected>Sila pilih negara / Please select a country</option>
+          </select>
+        </div>
+
+        <div id="other-nationality-field" class="form-group hidden-fields">
+          <label for="other_nationality_input" data-key="specify_nationality">Nyatakan Warganegara</label>
+          <input type="text" id="other_nationality_input" name="WarganegaraLain" class="uppercase" autocomplete="off">
+        </div>
+
+        <div id="malaysian-fields" class="hidden-fields">
+          <div class="form-group">
+            <label for="no_pr" data-key="pr_number">No. PR/Pas Kerja</label>
+            <input type="text" id="no_pr" name="NoPRPasKerja" class="uppercase" autocomplete="off">
+          </div>
+          <div class="form-group">
+            <label for="tarikh_mansuh_pr" data-key="pr_expiry">Tarikh Mansuh PR</label>
+            <input type="date" id="tarikh_mansuh_pr" name="TarikhMansuhPR" autocomplete="off">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email" data-key="email">Emel</label>
+          <input type="email" id="email" name="Email" required autocomplete="email">
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend data-key="vehicle_info">Maklumat Kenderaan</legend>
+
+        <div class="form-group">
+          <label for="jenama_model" data-key="brand_model">Jenama / Model</label>
+          <input type="text" id="jenama_model" name="JenamaModel" class="uppercase" required autocomplete="off">
+        </div>
+
+        <div class="form-group">
+          <label for="no_enjin" data-key="engine_no">No. Enjin</label>
+          <input type="text" id="no_enjin" name="NoEnjin" required autocomplete="off">
+        </div>
+
+        <div class="form-group">
+          <label for="no_rangka" data-key="chassis_no">No. Rangka</label>
+          <input type="text" id="no_rangka" name="NoRangka" required autocomplete="off">
+        </div>
+
+        <div class="form-group">
+          <label for="tahun_dibentuk" data-key="year_made">Tahun Dibuat</label>
+          <input type="number" id="tahun_dibentuk" name="TahunDibentuk" placeholder="2023" min="1900" max="2099" required autocomplete="off">
+        </div>
+
+        <div class="form-group">
+          <label for="jenis_badan" data-key="body_type">Jenis Badan</label>
+          <input type="text" id="jenis_badan" name="JenisBadan" placeholder="Contoh: Saloon, SUV" class="uppercase" required autocomplete="off">
+        </div>
+
+        <div class="form-group">
+          <label for="no_insuran" data-key="insurance_no">No. Insuran</label>
+          <input type="text" id="no_insuran" name="NoInsuran" required autocomplete="off">
+        </div>
+
+        <div class="form-group">
+          <label for="tarikh_luput_insuran" data-key="insurance_expiry">Tarikh Luput Insuran</label>
+          <input type="date" id="tarikh_luput_insuran" name="TarikhLuputInsuran" required autocomplete="off">
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend data-key="travel_info">Maklumat Perjalanan</legend>
+
+        <div class="form-group">
+          <label for="alamat_malaysia" data-key="malaysia_address">Alamat di Malaysia</label>
+          <textarea id="alamat_malaysia" name="AlamatMalaysia" class="uppercase" rows="4" required autocomplete="street-address"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="tarikh_tiba" data-key="arrival_date">Tarikh Tiba</label>
+          <input type="date" id="tarikh_tiba" name="TarikhTiba" required autocomplete="off">
+        </div>
+      </fieldset>
+
+      <div class="form-group confirmation-group">
+        <label for="confirm-checkbox" style="font-weight: 600; display: block;">
+          <input type="checkbox" id="confirm-checkbox" style="margin-right: 10px;">
+          <span data-key="declaration">Saya mengesahkan semua maklumat yang diberikan adalah benar.</span>
+        </label>
+      </div>
+
+      <div class="disclaimer-with-checkbox">
+        <input type="checkbox" disabled style="margin-right: 8px; visibility: hidden;">
+        <p class="disclaimer" data-key="disclaimer">Peringatan: Sebarang maklumat palsu boleh dikenakan tindakan undang-undang.</p>
+      </div>
+
+      <div class="g-recaptcha" data-sitekey="6Lfc3JorAAAAAGtK3DqOFqgXxSOmgekkZX59Lmvh"></div>
+
+      <button type="submit" id="submitBtn" class="submit-btn" data-key="submit">Hantar</button>
     </div>
-
-    <div class="form-group">
-     <label for="jantina" data-key="gender">Jantina</label>
-      <select id="jantina" name="Jantina" required>Sila pilih jantina</select>
-    </div>
-
-    <div class="form-group">
-      <label for="no_pasport" data-key="passport_no"></label>
-      <input type="text" id="no_pasport" name="NoPasport" class="uppercase" required>
-    </div>
-
-    <!-- ✅ Dikemaskini bahagian ini sahaja -->
-    <div class="form-group">
-      <label for="warganegara" data-key="nationality"></label>
-      <select id="warganegara" name="Warganegara" required>
-        <option value="" disabled selected>Sila pilih negara / Please select a country</option>
-      </select>
-    </div>
-    <!-- ✅ Tamat kemaskini -->
-
-    <div id="other-nationality-field" class="form-group hidden-fields">
-      <label for="other_nationality_input" data-key="specify_nationality"></label>
-      <input type="text" id="other_nationality_input" name="WarganegaraLain" class="uppercase">
-    </div>
-
-    <div id="malaysian-fields" class="hidden-fields">
-      <div class="form-group">
-        <label for="no_pr" data-key="pr_number"></label>
-        <input type="text" id="no_pr" name="NoPRPasKerja" class="uppercase">
-      </div>
-      <div class="form-group">
-        <label for="tarikh_mansuh_pr" data-key="pr_expiry"></label>
-        <input type="date" id="tarikh_mansuh_pr" name="TarikhMansuhPR">
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label for="email" data-key="email"></label>
-      <input type="email" id="email" name="Email" required>
-    </div>
-  </fieldset>
-
-    <fieldset>
-      <legend data-key="vehicle_info"></legend>
-
-      <div class="form-group">
-        <label for="jenama_model" data-key="brand_model"></label>
-        <input type="text" id="jenama_model" name="JenamaModel" class="uppercase" required>
-      </div>
-
-      <div class="form-group">
-        <label for="no_enjin" data-key="engine_no"></label>
-        <input type="text" id="no_enjin" name="NoEnjin" required>
-      </div>
-
-      <div class="form-group">
-        <label for="no_rangka" data-key="chassis_no"></label>
-        <input type="text" id="no_rangka" name="NoRangka" required>
-      </div>
-
-      <div class="form-group">
-        <label for="tahun_dibentuk" data-key="year_made"></label>
-        <input type="number" id="tahun_dibentuk" name="TahunDibentuk" placeholder="2023" min="1900" max="2099" required>
-      </div>
-
-      <div class="form-group">
-        <label for="jenis_badan" data-key="body_type"></label>
-        <input type="text" id="jenis_badan" name="JenisBadan" placeholder="Contoh: Saloon, SUV" class="uppercase" required>
-      </div>
-
-      <div class="form-group">
-        <label for="no_insuran" data-key="insurance_no"></label>
-        <input type="text" id="no_insuran" name="NoInsuran" required>
-      </div>
-
-      <div class="form-group">
-        <label for="tarikh_luput_insuran" data-key="insurance_expiry"></label>
-        <input type="date" id="tarikh_luput_insuran" name="TarikhLuputInsuran" required>
-      </div>
-    </fieldset>
-
-    <fieldset>
-      <legend data-key="travel_info"></legend>
-
-      <div class="form-group">
-        <label for="alamat_malaysia" data-key="malaysia_address"></label>
-        <textarea id="alamat_malaysia" name="AlamatMalaysia" class="uppercase" rows="4" required></textarea>
-      </div>
-
-      <div class="form-group">
-        <label for="tarikh_tiba" data-key="arrival_date"></label>
-        <input type="date" id="tarikh_tiba" name="TarikhTiba" required>
-      </div>
-    </fieldset>
-
-    <div class="form-group confirmation-group">
-      <label for="confirm-checkbox" style="font-weight: 600; display: block;">
-        <input type="checkbox" id="confirm-checkbox" style="margin-right: 10px;">
-        <span data-key="declaration"></span>
-      </label>
-    </div>
-
-    <div class="disclaimer-with-checkbox">
-      <input type="checkbox" disabled style="margin-right: 8px; visibility: hidden;">
-      <p class="disclaimer" data-key="disclaimer"></p>
-    </div>
-
-    <div class="g-recaptcha" data-sitekey="6Lfc3JorAAAAAGtK3DqOFqgXxSOmgekkZX59Lmvh"></div>
-    <button type="submit" id="submitBtn" class="submit-btn" data-key="submit"></button>
-</div>
   </form>
-
 </div>
+
 <script src="script.js"></script>
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </body>
 </html>
