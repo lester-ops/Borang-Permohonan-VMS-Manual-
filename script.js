@@ -257,6 +257,14 @@ async function generatePDF() {
 
   const getValue = (id) => document.getElementById(id)?.value?.trim() || "-";
 
+  // ✅ Fungsi format tarikh kepada DD/MM/YYYY
+  const getFormattedDate = (id) => {
+  const raw = document.getElementById(id)?.value;
+  if (!raw) return "-";
+  const [year, month, day] = raw.split("-");
+  return `${day}/${month}/${year}`;
+};
+
   // ✅ Fungsi seksyen
   function sectionTitle(title) {
     y += 6;
@@ -305,7 +313,7 @@ async function generatePDF() {
   row("passport_no", getValue("no_pasport"));
   row("nationality", getValue("warganegara") === "OTHER" ? getValue("other_nationality_input") : getValue("warganegara"));
   row("pr_number", getValue("no_pr"));
-  row("pr_expiry", getValue("tarikh_mansuh_pr"));
+  row("pr_expiry", getFormattedDate("tarikh_mansuh_pr"));
   row("email", getValue("email"));
 
   // ✅ Seksyen 2
@@ -316,7 +324,7 @@ async function generatePDF() {
   row("year_made", getValue("tahun_dibentuk"));
   row("body_type", getValue("jenis_badan"));
   row("insurance_no", getValue("no_insuran"));
-  row("insurance_expiry", getValue("tarikh_luput_insuran"));
+  row("insurance_expiry", getFormattedDate("tarikh_luput_insuran"));
 
   // ✅ Seksyen 3
   sectionTitle(t.travel_info);
@@ -336,7 +344,7 @@ async function generatePDF() {
   doc.text(alamatWrapped, valueX, y);
   y += (alamatWrapped.length * (lineHeight - 2));
 
-  row("arrival_date", getValue("tarikh_tiba"));
+  row("arrival_date", getFormattedDate("tarikh_tiba"));
 
   // ✅ Pengesahan
   y += 10;
