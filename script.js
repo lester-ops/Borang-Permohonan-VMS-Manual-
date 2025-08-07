@@ -19,8 +19,8 @@ const translations = {
     travel_info: "Maklumat Perjalanan",
     malaysia_address: "Alamat di Malaysia",
     arrival_date: "Tarikh Tiba",
-    declaration: "Saya mengesahkan maklumat ini adalah betul dan sah.",
-    disclaimer: "Kerajaan Malaysia tidak bertanggungjawab atas kehilangan atau kerosakan.",
+    declaration: "Saya dengan ini mengesahkan bahawa butir-butir yang diberikan adalah betul dan akan mematuhi syarat-syarat yang ditetapkan.",
+    disclaimer: "Kerajaan Malaysia dan Jabatan Kastam Diraja Malaysia (\"JKDM\", \"kami\") adalah tidak bertanggungjawab bagi apa-apa kehilangan atau kerugian yang disebabkan oleh penggunaan maklumat dari laman web ini.",
     submit: "Hantar Permohonan"
   },
   en: {
@@ -43,8 +43,8 @@ const translations = {
     travel_info: "Travel Information",
     malaysia_address: "Address in Malaysia",
     arrival_date: "Arrival Date",
-    declaration: "I confirm that the information provided is accurate.",
-    disclaimer: "The Malaysian Government shall not be liable for any loss or damage.",
+    declaration: "I hereby confirm that the information provided is accurate and I will comply with the specified conditions.",
+    disclaimer: "The Government of Malaysia and the Royal Malaysian Customs Department (\"RMCD\", \"we\") shall not be held liable for any loss or damage caused by the use of any information obtained from this website.",
     submit: "Submit Application"
   }
 };
