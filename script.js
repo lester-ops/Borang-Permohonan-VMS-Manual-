@@ -320,7 +320,7 @@ async function generatePDF() {
 
   // ✅ Seksyen 2
   sectionTitle(t.vehicle_info);
-  row("brand_model", getValue("jenama_model").toUppercase());
+  row("brand_model", getValue("jenama_model").toUpperCase());
   row("engine_no", getValue("no_enjin"));
   row("chassis_no", getValue("no_rangka"));
   row("year_made", getValue("tahun_dibentuk"));
