@@ -251,17 +251,17 @@ async function generatePDF() {
   const t = translations[lang];
 
   const marginLeft = 20;
-  const labelWidth = 50;
-  const valueX = marginLeft + labelWidth + 5;
+  const labelWidth = 55;
+  const valueX = marginLeft + labelWidth + 15; // ✅ jawapan ke kanan sedikit
   let y = 55;
   const lineHeight = 8;
 
   const getValue = (id) => document.getElementById(id)?.value?.trim() || "-";
 
-  // ───────────────────────────────────────────────────────
-  // ⚠️ 1. MASUKKAN GAMBAR HEADER (LOGO KASTAM)
+  // ────────────────────────────────────────────────
+  // ⚠️ 1. HEADER IMAGE (KASTAM LOGO)
   const headerImg = new Image();
-  headerImg.src = 'header.png'; // Pastikan header.png wujud di lokasi yang betul
+  headerImg.src = 'header.png';
 
   await new Promise(resolve => {
     headerImg.onload = () => {
@@ -272,14 +272,27 @@ async function generatePDF() {
     };
   });
 
-  // ───────────────────────────────────────────────────────
-  // ⚠️ 2. TAJUK SEKSYEN: Maklumat Pemohon
-  doc.setFont("Helvetica", "bold");
-  doc.setFontSize(12);
-  doc.text(t.section_applicant, marginLeft, y);
-  y += lineHeight;
+  // ────────────────────────────────────────────────
+  // ⚠️ 2. TAJUK SEKSYEN DENGAN GARIS DAN POSISI TENGAH
+  function sectionTitle(title) {
+    y += 12; // ✅ Jarak dari seksyen sebelum
+    doc.setFont("Helvetica", "bold");
+    doc.setFontSize(12);
+    const textWidth = doc.getTextWidth(title);
+    const centerX = pageWidth / 2;
+    doc.text(title, centerX, y, { align: "center" });
 
-  // Fungsi bantu untuk memaparkan baris label + nilai
+    // Garisan bawah pendek di tengah
+    y += 1.5;
+    doc.setDrawColor(0);
+    doc.setLineWidth(0.5);
+    doc.line(centerX - 30, y, centerX + 30, y);
+
+    y += 4;
+  }
+
+  // ────────────────────────────────────────────────
+  // ⚠️ Fungsi bantu cetak baris label: value
   const row = (labelKey, value) => {
     const label = t[labelKey] || labelKey;
     doc.setFont("Helvetica", "normal");
@@ -289,7 +302,9 @@ async function generatePDF() {
     y += lineHeight;
   };
 
-  // ─── 2A. Maklumat Pemohon
+  // ────────────────────────────────────────────────
+  // ⚠️ Maklumat Pemohon
+  sectionTitle(t.section_applicant);
   row("full_name", getValue("nama_penuh"));
   row("gender", getValue("jantina"));
   row("passport_no", getValue("no_pasport"));
@@ -298,15 +313,9 @@ async function generatePDF() {
   row("pr_expiry", getValue("tarikh_mansuh_pr"));
   row("email", getValue("email"));
 
-  // ───────────────────────────────────────────────────────
-  // ⚠️ 3. TAJUK SEKSYEN: Maklumat Kenderaan
-  y += 5;
-  doc.setFont("Helvetica", "bold");
-  doc.setFontSize(12);
-  doc.text(t.vehicle_info, marginLeft, y);
-  y += lineHeight;
-
-  // ─── 3A. Maklumat Kenderaan
+  // ────────────────────────────────────────────────
+  // ⚠️ Maklumat Kenderaan
+  sectionTitle(t.vehicle_info);
   row("brand_model", getValue("jenama_model"));
   row("engine_no", getValue("no_enjin"));
   row("chassis_no", getValue("no_rangka"));
@@ -315,33 +324,35 @@ async function generatePDF() {
   row("insurance_no", getValue("no_insuran"));
   row("insurance_expiry", getValue("tarikh_luput_insuran"));
 
-  // ───────────────────────────────────────────────────────
-  // ⚠️ 4. TAJUK SEKSYEN: Maklumat Perjalanan
-  y += 5;
-  doc.setFont("Helvetica", "bold");
-  doc.setFontSize(12);
-  doc.text(t.travel_info, marginLeft, y);
-  y += lineHeight;
+  // ────────────────────────────────────────────────
+  // ⚠️ Maklumat Perjalanan
+  sectionTitle(t.travel_info);
 
-  // ─── 4A. Alamat dengan maxWidth supaya tidak langgar sempadan
+  // Cetak Alamat dengan label dan value sejajar (selari dengan jawapan lain)
   const alamat = getValue("alamat_malaysia");
-  const splitAlamat = doc.splitTextToSize(`${t.malaysia_address}: ${alamat}`, pageWidth - 2 * marginLeft); // <-- wrap text
+  const alamatLabel = `${t.malaysia_address}:`;
+  const alamatLines = doc.splitTextToSize(alamat, pageWidth - valueX - 10); // ✅ Wrap di sebelah kanan
   doc.setFont("Helvetica", "normal");
   doc.setFontSize(11);
-  doc.text(splitAlamat, marginLeft, y);
-  y += lineHeight * splitAlamat.length;
+  doc.text(alamatLabel, marginLeft, y);
+  alamatLines.forEach((line, index) => {
+    doc.text(line, valueX, y + index * lineHeight);
+  });
+  y += alamatLines.length * lineHeight;
 
+  // Jarak minimum sebelum "Tarikh Tiba"
+  y += 2;
   row("arrival_date", getValue("tarikh_tiba"));
 
-  // ───────────────────────────────────────────────────────
-  // ⚠️ 5. PENGAKUAN / DECLARATION
+  // ────────────────────────────────────────────────
+  // ⚠️ Pengesahan / Declaration
   y += 12;
   doc.setFont("Helvetica", "bold");
   doc.setFontSize(11);
   doc.text(t.declaration, marginLeft, y, { maxWidth: pageWidth - 2 * marginLeft });
 
-  // ───────────────────────────────────────────────────────
-  // ⚠️ 6. TARIKH CETAK
+  // ────────────────────────────────────────────────
+  // ⚠️ Tarikh Cetakan
   const today = new Date();
   const dateString = today.toLocaleDateString(lang === "ms" ? "ms-MY" : "en-GB", {
     day: 'numeric', month: 'long', year: 'numeric'
@@ -351,8 +362,9 @@ async function generatePDF() {
   doc.setFontSize(10);
   doc.text(`Tarikh Cetakan: ${dateString}`, pageWidth - marginLeft, pageHeight - 10, { align: "right" });
 
-  // ───────────────────────────────────────────────────────
-  // ⚠️ 7. NAMA FAIL PDF
+  // ────────────────────────────────────────────────
+  // ⚠️ Simpan PDF
   const nama = getValue("nama_penuh").replace(/\s+/g, "_") || "borang";
   doc.save(`Borang_${nama}.pdf`);
 }
+
