@@ -257,7 +257,7 @@ async function generatePDF() {
 
   const getValue = (id) => document.getElementById(id)?.value?.trim() || "-";
 
-  // ✅ Fungsi tempatan untuk seksyen
+  // ✅ Fungsi seksyen
   function sectionTitle(title) {
     y += 6;
     doc.setFont("Helvetica", "bold");
@@ -272,20 +272,21 @@ async function generatePDF() {
     y += 6;
   }
 
-  // ✅ Fungsi tempatan untuk baris label + jawapan
+  // ✅ Fungsi baris label + jawapan
   function row(labelKey, value) {
     const label = t[labelKey] || labelKey;
-    const labelX = marginLeft + 5;
-    const valueX = pageWidth / 2 + 25;
+    const labelX = marginLeft + 10;         // ✅ Label ditolak ke kanan sedikit
+    const valueX = labelX + 35;             // ✅ Jawapan diletakkan 30mm dari label
+    const labelY = y;
 
     doc.setFont("Helvetica", "normal");
     doc.setFontSize(11);
-    doc.text(`${label}:`, labelX, y);
-    doc.text(value || '-', valueX, y);
+    doc.text(`${label}:`, labelX, labelY);
+    doc.text(value || '-', valueX, labelY);
     y += lineHeight - 1;
   }
 
-  // ✅ Header
+  // ✅ Papar header
   const headerImg = new Image();
   headerImg.src = 'header.png';
   await new Promise(resolve => {
@@ -297,6 +298,7 @@ async function generatePDF() {
     };
   });
 
+  // ✅ Seksyen 1
   sectionTitle(t.section_applicant);
   row("full_name", getValue("nama_penuh"));
   row("gender", getValue("jantina"));
@@ -306,6 +308,7 @@ async function generatePDF() {
   row("pr_expiry", getValue("tarikh_mansuh_pr"));
   row("email", getValue("email"));
 
+  // ✅ Seksyen 2
   sectionTitle(t.vehicle_info);
   row("brand_model", getValue("jenama_model"));
   row("engine_no", getValue("no_enjin"));
@@ -315,21 +318,27 @@ async function generatePDF() {
   row("insurance_no", getValue("no_insuran"));
   row("insurance_expiry", getValue("tarikh_luput_insuran"));
 
+  // ✅ Seksyen 3
   sectionTitle(t.travel_info);
+
+  // ✅ Alamat (3 baris)
   const alamatLabel = t["malaysia_address"] + ":";
   const alamatValue = getValue("alamat_malaysia");
-  const labelX = marginLeft + 5;
-  const valueX = pageWidth / 2 + 25;
+  const labelX = marginLeft + 10;
+  const valueX = labelX + 35;
 
   doc.setFont("Helvetica", "normal");
   doc.setFontSize(11);
   doc.text(alamatLabel, labelX, y);
-  const alamatWrapped = doc.splitTextToSize(alamatValue || '-', pageWidth - labelX - 25);
+
+  const alamatMaxWidth = pageWidth - valueX - marginLeft;
+  const alamatWrapped = doc.splitTextToSize(alamatValue || '-', alamatMaxWidth);
   doc.text(alamatWrapped, valueX, y);
   y += (alamatWrapped.length * (lineHeight - 2));
 
   row("arrival_date", getValue("tarikh_tiba"));
 
+  // ✅ Pengesahan
   y += 10;
   doc.setFont("Helvetica", "bold");
   doc.setFontSize(11);
@@ -347,6 +356,7 @@ async function generatePDF() {
   const nama = getValue("nama_penuh").replace(/\s+/g, "_") || "borang";
   doc.save(`Borang_${nama}.pdf`);
 }
+
 
 
 
