@@ -324,7 +324,7 @@ async function generatePDF() {
   row("engine_no", getValue("no_enjin"));
   row("chassis_no", getValue("no_rangka"));
   row("year_made", getValue("tahun_dibentuk"));
-  row("body_type", getValue("jenis_badan"));
+  row("body_type", getValue("jenis_badan").toUpperCase());
   row("insurance_no", getValue("no_insuran"));
   row("insurance_expiry", getFormattedDate("tarikh_luput_insuran"));
 
