@@ -21,7 +21,8 @@ const translations = {
     arrival_date: "Tarikh Tiba",
     declaration: "Saya dengan ini mengesahkan bahawa butir-butir yang diberikan adalah betul dan akan mematuhi syarat-syarat yang ditetapkan.",
     disclaimer: "Kerajaan Malaysia dan Jabatan Kastam Diraja Malaysia (\"JKDM\", \"kami\") adalah tidak bertanggungjawab bagi apa-apa kehilangan atau kerugian yang disebabkan oleh penggunaan maklumat dari laman web ini.",
-    submit: "Hantar Permohonan"
+    submit: "Hantar Permohonan",
+    language_prompt: "Pilihan Bahasa"
   },
   en: {
     section_applicant: "Applicant Information",
@@ -45,7 +46,8 @@ const translations = {
     arrival_date: "Arrival Date",
     declaration: "I hereby confirm that the information provided is accurate and I will comply with the specified conditions.",
     disclaimer: "The Government of Malaysia and the Royal Malaysian Customs Department (\"RMCD\", \"we\") shall not be held liable for any loss or damage caused by the use of any information obtained from this website.",
-    submit: "Submit Application"
+    submit: "Submit Application",
+    language_prompt: "Language Choice"
   }
 };
 
@@ -351,6 +353,12 @@ async function generatePDF() {
   doc.setFont("Helvetica", "bold");
   doc.setFontSize(11);
   doc.text(t.declaration, marginLeft, y, { maxWidth: pageWidth - 2 * marginLeft });
+
+  // ✅ Disclaimer
+  y += 16; // jarak 2 baris dari pengesahan
+  doc.setFont("Helvetica", "normal"); // Guna normal font
+  doc.setFontSize(10); // Kecilkan sedikit
+  doc.text(t.disclaimer, marginLeft, y, {maxWidth: pageWidth - 2 * marginLeft});
 
   const today = new Date();
   const dateString = today.toLocaleDateString(lang === "ms" ? "ms-MY" : "en-GB", {
